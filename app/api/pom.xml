@@ -10,7 +10,7 @@
     </parent>
     <groupId>fr.koi</groupId>
     <artifactId>wiki-api</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>koi-wiki</name>
     <description>koi-wiki</description>
     <packaging>jar</packaging>
