@@ -1,0 +1,11 @@
+spring:
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:postgresql://${KOI_WIKI_DATABASE_HOST}:${KOI_WIKI_DATABASE_PORT}/${KOI_WIKI_DATABASE_NAME}
+    username: ${KOI_WIKI_DATABASE_USER}
+    password: ${KOI_WIKI_DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    contexts: ${KOI_WIKI_PROFILE}
+    change-log: classpath:/db/changelog/master.xml

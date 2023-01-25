@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Api" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="dev" />
+    <envs>
+      <env name="KOI_WIKI_API_PORT" value="8080" />
+      <env name="KOI_WIKI_DATABASE_HOST" value="localhost" />
+      <env name="KOI_WIKI_DATABASE_NAME" value="koi_wiki" />
+      <env name="KOI_WIKI_DATABASE_PASSWORD" value="koi_wiki" />
+      <env name="KOI_WIKI_DATABASE_PORT" value="5432" />
+      <env name="KOI_WIKI_DATABASE_USER" value="koi_wiki" />
+    </envs>
+    <module name="wiki-api" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="fr.koi.wikiapi.KoiWikiApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

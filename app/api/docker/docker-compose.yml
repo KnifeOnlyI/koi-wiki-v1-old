@@ -1,0 +1,12 @@
+version: "3.6"
+
+services:
+  koi-wiki-database:
+    container_name: koi-wiki-database
+    image: postgres:15.1-alpine3.17
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: koi_wiki
+      POSTGRES_USER: koi_wiki
+      POSTGRES_PASSWORD: koi_wiki
