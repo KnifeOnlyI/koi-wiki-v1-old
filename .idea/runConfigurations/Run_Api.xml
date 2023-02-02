@@ -8,6 +8,10 @@
       <env name="KOI_WIKI_DATABASE_PASSWORD" value="koi_wiki" />
       <env name="KOI_WIKI_DATABASE_PORT" value="5432" />
       <env name="KOI_WIKI_DATABASE_USER" value="koi_wiki" />
+      <env name="KOI_WIKI_KEYCLOAK_CLIENT_ID" value="koi-wiki-api" />
+      <env name="KOI_WIKI_KEYCLOAK_HOST" value="http://localhost:8180" />
+      <env name="KOI_WIKI_KEYCLOAK_REALM" value="koi-wiki" />
+      <env name="KOI_WIKI_KEYCLOAK_PORT" value="8180" />
     </envs>
     <module name="wiki-api" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="fr.koi.wikiapi.KoiWikiApplication" />

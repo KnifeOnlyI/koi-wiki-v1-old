@@ -7,6 +7,7 @@
         <option name="services">
           <list>
             <option value="koi-wiki-database" />
+            <option value="koi-wiki-keycloak" />
           </list>
         </option>
         <option name="sourceFilePath" value="app/api/docker/docker-compose.yml" />

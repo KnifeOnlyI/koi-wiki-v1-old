@@ -7,4 +7,12 @@ spring:
     password: koiwiki
     driver-class-name: org.h2.Driver
   liquibase:
+    contexts: test
     change-log: classpath:/db/changelog-test/master.xml
+
+koi-wiki:
+  security:
+    keycloak:
+      host: http://localhost:8180
+      realm: koi-wiki
+      client-id: koi-wiki-api

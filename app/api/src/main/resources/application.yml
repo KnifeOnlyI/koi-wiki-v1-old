@@ -9,3 +9,10 @@ spring:
   liquibase:
     contexts: ${KOI_WIKI_PROFILE}
     change-log: classpath:/db/changelog/master.xml
+
+koi-wiki:
+  security:
+    keycloak:
+      host: ${KOI_WIKI_KEYCLOAK_HOST}:${KOI_WIKI_KEYCLOAK_PORT}
+      realm: ${KOI_WIKI_KEYCLOAK_REALM}
+      client-id: ${KOI_WIKI_KEYCLOAK_CLIENT_ID}
