@@ -15,7 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The filter to manage the JWT token send in request.
@@ -41,7 +43,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         DecodedJWT jwt = jwtUtils.validate(token);
 
         String username = jwt.getClaim("preferred_username").asString();
-        List<String> permissions = (List<String>) jwt.getClaim("realm_access").asMap().get("roles");
+        List<String> realmAccess = (List<String>) jwt.getClaim("realm_access").asMap().get("roles");
+        List<String> resourceAccess = (List<String>) ((Map<String, Object>) jwt.getClaim("resource_access").asMap().get("account")).get("roles");
+        List<String> permissions = new ArrayList<>();
+
+        permissions.addAll(realmAccess);
+        permissions.addAll(resourceAccess);
 
         KoiWikiUserDetails userDetails = new KoiWikiUserDetails(username, permissions);
 

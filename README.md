@@ -1,75 +1,111 @@
 # KOI Wiki
 
-## Docker
+## Development guide
 
-To build docker image (a *.jar file must be present in `api/app/target`) :
+### IntelliJ
+
+The project have multiple runners to help developers :
+
+- Start API
+- Start WebApp
+- Run Development Docker Containers
+- Run All API Tests
+- Run All WebApp Tests
+
+### Keycloak configuration for development
+
+1. First, run keycloak development docker container
+2. Login into administration console : `http://localhost:8082`
+3. Create `koi-wiki` realm
+    - Realm name : koi-wiki
+    - Enabled: true
+4. Create `koi-wiki-client` client in `koi-wiki` realm
+    - Clients > Create client
+        - Client type : OpenID Connect
+        - Client ID : koi-wiki-api
+        - Next
+        - Client authentication : Off
+        - Authorization : Off
+        - Standard flow : On
+        - Direct access grants : On
+        - Implicit flow : Off
+        - Service accounts roles : Off
+        - OAuth 2.0 Device Authorization Grant : Off
+        - OIDC CIBA Grant : Off
+5. Create a new user
+    - Users > Create a new user
+        - Username : <username>
+        - Email : <email>
+        - Email verified : On
+        - Create
+        - Credentials > Set password
+            - Password : <password>
+            - Password confirmation : <password>
+            - Temporary : Off
+
+### Environment variables for WebApp
+
+In dev and prod environments, the WebApp need environments variables in `app/webapp/src/environments/environment.ts` file.
+
+See `Build WebApp` to see how to set environments variables values.
+
+This file is not tracked by git.
+
+## Deployment guide
+
+### Build and push API docker image
+
+Build .jar file :
 
 ```bash
-cd app/api
+cd app/api # Go into API source root directory
+mvn package
+```
 
-docker build . -t <repo>/<image>[:<tag>] .
+Build the API image :
+
+```bash
+cd app/api # Go into API source root directory
+docker build . -t <repo>/<image>[:<tag>] # Build the image
+```
+
+Example :
+
+```bash
 docker build . -t knifeonlyi/koi-wiki-api:1.0.0
 ```
 
-To push image in remote repository
+Push the image in registry :
 
 ```bash
-docker push <repo>/<image>[:<tag>]
+docker push <repo>/<image>[:<tag>] # Push the specified image in registry
+```
+
+Example :
+
+```bash
 docker push knifeonlyi/koi-wiki-api:1.0.0
 ```
 
-An example of docker-compose
+### Build WebApp
 
-```yaml
-version: "3.6"
+Update environments file (`app/webapp/src/environments/environment.ts`) following this example :
 
-services:
-  koi-wiki-api:
-    container_name: koi-wiki-api
-    image: knifeonlyi/koi-wiki-api
-    ports:
-      - "8080:8080"
-    environment:
-      KOI_WIKI_PROFILE: prod
-      KOI_WIKI_DATABASE_HOST: koi-wiki-database
-      KOI_WIKI_DATABASE_PORT: 5432
-      KOI_WIKI_DATABASE_NAME: koi_wiki
-      KOI_WIKI_DATABASE_USER: koi_wiki
-      KOI_WIKI_DATABASE_PASSWORD: koi_wiki
-      KOI_WIKI_KEYCLOAK_HOST: koi-wiki-keycloak
-      KOI_WIKI_KEYCLOAK_PORT: 8180
-      KOI_WIKI_KEYCLOAK_REALM: koi-wiki
-      KOI_WIKI_KEYCLOAK_CLIENT_ID: koi-wiki-api
-    depends_on:
-      - koi-wiki-database
-    networks:
-      - koi-wiki-prod-network
+```js
+const appTitle = 'KOI Wiki WebApp !'
+const apiHost = 'http://localhost';
+const apiPort = 8080;
+const baseApiUrl = `${apiHost}:${apiPort}/api/v1`;
 
-  koi-wiki-database:
-    container_name: koi-wiki-database
-    image: postgres:15.1-alpine3.17
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: koi_wiki
-      POSTGRES_USER: koi_wiki
-      POSTGRES_PASSWORD: koi_wiki
-    networks:
-      - koi-wiki-prod-network
+export const environment = {
+    appTitle,
+    baseApiUrl,
+};
+```
 
-  koi-wiki-keycloak:
-    container_name: koi-wiki-keycloak
-    image: quay.io/keycloak/keycloak:20.0.3
-    entrypoint: /opt/keycloak/bin/kc.sh start-dev
-    ports:
-      - "8180:8080"
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    networks:
-      - koi-wiki-prod-network
+Build dist files :
 
-networks:
-  koi-wiki-prod-network:
-    name: koi-wiki-prod-network
+```bash
+cd /app/webapp # Go into WebApp source root directory
+npm run build
 ```

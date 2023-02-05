@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>fr.koi</groupId>
-    <artifactId>wiki-api</artifactId>
+    <artifactId>koi-wiki-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>koi-wiki</name>
-    <description>koi-wiki</description>
+    <name>koi-wiki-api</name>
+    <description>koi-wiki-api</description>
     <packaging>jar</packaging>
     <properties>
         <java.version>17</java.version>

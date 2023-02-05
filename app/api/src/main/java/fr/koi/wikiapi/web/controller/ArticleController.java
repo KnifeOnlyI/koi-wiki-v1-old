@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/test")
-public class TestController {
-    @GetMapping("/create-article")
+@RequestMapping("/api/v1/articles")
+public class ArticleController {
+    @GetMapping("/create")
     @RolesAllowed("create-article")
     public Map<String, String> createArticle() {
         Map<String, String> value = new HashMap<>();
@@ -21,7 +21,7 @@ public class TestController {
         return value;
     }
 
-    @GetMapping("/delete-article")
+    @GetMapping("/delete")
     @RolesAllowed("delete-article")
     public Map<String, String> test() {
         Map<String, String> value = new HashMap<>();
