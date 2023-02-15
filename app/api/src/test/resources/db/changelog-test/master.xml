@@ -4,5 +4,14 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="classpath:/db/changelog/master.xml"/>
+    <include file="db/changelog/master.xml" relativeToChangelogFile="false"/>
+
+    <changeSet id="test-article-category" author="knife">
+        <loadData usePreparedStatements="true"
+                  tableName="article_category"
+                  file="changelog-test/article-category.csv"
+                  relativeToChangelogFile="true"/>
+
+        <sql>alter sequence article_category_id_seq restart with (select max(id) + 1 from article_category)</sql>
+    </changeSet>
 </databaseChangeLog>

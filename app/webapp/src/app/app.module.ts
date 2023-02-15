@@ -9,6 +9,8 @@ import {RouterModule} from "@angular/router";
 import {ROUTES} from "./app.routes";
 import {SharedModule} from "./shared/shared.module";
 import {CoreModule} from "./core/core.module";
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -22,6 +24,7 @@ import {CoreModule} from "./core/core.module";
     CoreModule,
     SharedModule,
     FeaturesModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

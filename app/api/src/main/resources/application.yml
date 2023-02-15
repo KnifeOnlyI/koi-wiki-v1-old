@@ -14,5 +14,6 @@ koi-wiki:
   security:
     keycloak:
       host: ${KOI_WIKI_KEYCLOAK_HOST}:${KOI_WIKI_KEYCLOAK_PORT}
+      authorized-token-issuer: ${KOI_WIKI_KEYCLOAK_AUTHORIZED_TOKEN_ISSUER}
       realm: ${KOI_WIKI_KEYCLOAK_REALM}
       client-id: ${KOI_WIKI_KEYCLOAK_CLIENT_ID}

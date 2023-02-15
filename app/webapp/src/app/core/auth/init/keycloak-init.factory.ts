@@ -1,5 +1,6 @@
 import {KeycloakService} from "keycloak-angular";
 import {environment} from "../../../../environments/environment";
+import {UserService} from "../service/user.service";
 
 /**
  * Method to configure and initialize keycloak.
@@ -18,5 +19,5 @@ export function initializeKeycloak(keycloak: KeycloakService) {
         onLoad: 'check-sso',
         checkLoginIframe: false
       }
-    });
+    }).then(authenticated => UserService.isAuthenticated = authenticated);
 }

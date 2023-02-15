@@ -1,0 +1,29 @@
+<nav class="navbar-root">
+  <a [routerLink]="''" class="navbar-item-home" color="primary" mat-flat-button type="button">
+    {{appTitle}}
+  </a>
+  <a *ngIf="showArticleCategoriesActionButton" [routerLink]="['articles-categories']" class="navbar-item"
+     color="primary" mat-flat-button type="button">
+    {{'articles-categories.title' | translate}}
+  </a>
+
+  <button (click)="login()"
+          class="navbar-item navbar-login-item"
+          color="primary"
+          isAnonymous
+          mat-flat-button
+          type="button"
+  >
+    {{'auth.actions.login.label' | translate}}
+  </button>
+
+  <button (click)="logout()"
+          class="navbar-item navbar-logout-item"
+          color="primary"
+          isAuthenticated
+          mat-flat-button
+          type="button"
+  >
+    {{'auth.actions.logout.label' | translate}}
+  </button>
+</nav>

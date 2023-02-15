@@ -1,8 +1,8 @@
 package fr.koi.wikiapi.config;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import fr.koi.wikiapi.dao.KoiWikiUserDetails;
-import fr.koi.wikiapi.service.JwtService;
+import fr.koi.wikiapi.dto.user.KoiWikiUserDetails;
+import fr.koi.wikiapi.service.user.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

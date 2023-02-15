@@ -1,0 +1,93 @@
+{
+  "general": {
+    "actions": {
+      "actions": "Actions",
+      "save": "Save",
+      "cancel": "Cancel",
+      "reset": "Reset",
+      "close": "Close",
+      "confirm": "Confirm"
+    },
+    "confirmationDialog": {
+      "defaultTitle": "Confirmation",
+      "defaultContent": "Are you sure ?"
+    }
+  },
+  "auth": {
+    "actions": {
+      "login": {
+        "label": "Login"
+      },
+      "logout": {
+        "label": "Logout"
+      }
+    }
+  },
+  "pagination": {
+    "firstPage": "First page",
+    "lastPage": "Last page",
+    "itemsPerPage": "Items per page",
+    "nextPage": "Next page",
+    "previousPage": "Previous page",
+    "pageRange": "Page {{currentPage}} of {{nbPages}} (total results : {{totalNbResults}})"
+  },
+  "filter": {
+    "placeholder": {
+      "label": "Filter"
+    }
+  },
+  "articles-categories": {
+    "title": "Articles categories",
+    "fields": {
+      "id": {
+        "label": "#"
+      },
+      "name": {
+        "label": "Name",
+        "errors": {
+          "required": "Required field",
+          "maxlength": "Maximum length is 255"
+        }
+      },
+      "description": {
+        "label": "Description",
+        "errors": {
+          "maxlength": "Maximum length is 1000"
+        }
+      },
+      "createdAt": {
+        "label": "Creation date"
+      },
+      "lastUpdateAt": {
+        "label": "Last update date"
+      },
+      "deletedAt": {
+        "label": "Deletion date"
+      }
+    },
+    "editor": {
+      "title": {
+        "create": "Create new article category",
+        "edit": "Edit article category"
+      }
+    },
+    "actions": {
+      "create": {
+        "button": "Create new",
+        "success": "Article category created"
+      },
+      "edit": {
+        "label": "Edit",
+        "success": "Article category updated"
+      },
+      "delete": {
+        "label": "Delete",
+        "success": "Article category deleted"
+      },
+      "deleteForever": {
+        "label": "Delete forever",
+        "success": "Article category deleted definitively"
+      }
+    }
+  }
+}

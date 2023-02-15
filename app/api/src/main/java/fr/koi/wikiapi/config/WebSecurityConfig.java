@@ -1,5 +1,6 @@
 package fr.koi.wikiapi.config;
 
+import fr.koi.wikiapi.constants.Urls;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +14,6 @@ import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -28,28 +26,18 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain publicFilterChain(HttpSecurity http) throws Exception {
-        return http
+        http
             .csrf(AbstractHttpConfigurer::disable)
             .cors()
             .and()
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/api/v1/auth/token",
-                    "/api/v1/auth/refresh-token"
-                )
-                .anonymous()
-            )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/logout")
-                .authenticated()
-            )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/**")
+                .requestMatchers(String.format("%s/**", Urls.VERSION))
                 .authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(this.jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
+            .addFilterBefore(this.jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
@@ -58,14 +46,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    GrantedAuthorityDefaults grantedAuthorityDefaults() {
+    public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
     }
 }

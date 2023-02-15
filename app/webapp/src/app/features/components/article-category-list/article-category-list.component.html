@@ -1,0 +1,148 @@
+<div *ngIf="showActionsBar" class="actions-bar">
+  <a [routerLink]="['/articles-categories', 'create']" color="primary"
+     mat-flat-button>{{'articles-categories.actions.create.button' | translate}}</a>
+</div>
+
+<table (matSortChange)="onSortChange($event)"
+       *ngIf="data"
+       [dataSource]="data.content"
+       [formGroup]="searchForm"
+       mat-table
+       matSort>
+
+  <ng-container matColumnDef="idFilter">
+    <th *matHeaderCellDef mat-header-cell>
+    </th>
+  </ng-container>
+  <ng-container matColumnDef="id">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="id">
+      {{'articles-categories.fields.id.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      {{element.id}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="nameFilter">
+    <th *matHeaderCellDef mat-header-cell>
+      <mat-form-field appearance="outline" class="filter">
+        <input formControlName="name" matInput placeholder="{{'filter.placeholder.label' | translate}}">
+      </mat-form-field>
+    </th>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <th *matHeaderCellDef mat-header-cell>
+      {{'articles-categories.fields.name.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      {{element.name}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="descriptionFilter">
+    <th *matHeaderCellDef mat-header-cell>
+      <mat-form-field appearance="outline" class="filter">
+        <input formControlName="description" matInput placeholder="{{'filter.placeholder.label' | translate}}">
+      </mat-form-field>
+    </th>
+  </ng-container>
+  <ng-container matColumnDef="description">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="description">
+      {{'articles-categories.fields.description.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      {{element.description}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAtFilter">
+    <th *matHeaderCellDef mat-header-cell></th>
+  </ng-container>
+  <ng-container matColumnDef="createdAt">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="createdAt">
+      {{'articles-categories.fields.createdAt.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <app-date-viewer [date]="element.createdAt"></app-date-viewer>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="lastUpdateAtFilter">
+    <th *matHeaderCellDef mat-header-cell></th>
+  </ng-container>
+  <ng-container matColumnDef="lastUpdateAt">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="lastUpdateAt">
+      {{'articles-categories.fields.lastUpdateAt.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <app-date-viewer [date]="element.lastUpdateAt"></app-date-viewer>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="deletedAtFilter">
+    <th *matHeaderCellDef mat-header-cell></th>
+  </ng-container>
+  <ng-container matColumnDef="deletedAt">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="deletedAt">
+      {{'articles-categories.fields.deletedAt.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <app-date-viewer [date]="element.deletedAt"></app-date-viewer>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actionsFilter">
+    <th *matHeaderCellDef mat-header-cell></th>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <th *matHeaderCellDef mat-header-cell>
+      {{'general.actions.actions' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <button [matMenuTriggerFor]="menu" mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        <ng-container *ngIf="!element.deletedAt; else actionsOnDeletedArticleCategory">
+          <a *ngIf="showEditArticleCategoryButton" [routerLink]="['/articles-categories', 'edit', element.id]"
+             mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            <span>{{'articles-categories.actions.edit.label' | translate}}</span>
+          </a>
+
+          <button (click)="onDelete(element.id)" *ngIf="showDeleteArticleCategoryButton" mat-menu-item>
+            <mat-icon>delete</mat-icon>
+            <span>{{'articles-categories.actions.delete.label' | translate}}</span>
+          </button>
+        </ng-container>
+        <ng-template #actionsOnDeletedArticleCategory>
+          <a *ngIf="showEditDeletedArticleCategoryButton" [routerLink]="['/articles-categories', 'edit', element.id]"
+             mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            <span>{{'articles-categories.actions.edit.label' | translate}}</span>
+          </a>
+
+          <button (click)="onDelete(element.id)" *ngIf="showDeleteDeletedArticleCategoryButton" mat-menu-item>
+            <mat-icon>delete_forever</mat-icon>
+            <span>{{'articles-categories.actions.deleteForever.label' | translate}}</span>
+          </button>
+        </ng-template>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matHeaderRowDef="displayedFilterColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+</table>
+
+<mat-paginator
+  (page)="onPaginationChange($event)"
+  [length]="data?.totalElements"
+  [pageSizeOptions]="[10, 20, 50, 100]"
+  [pageSize]="pageSize"
+  [showFirstLastButtons]="true">
+</mat-paginator>
+
+

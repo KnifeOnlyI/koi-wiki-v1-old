@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>{{'general.confirmationDialog.defaultTitle'| translate}}</h2>
+
+<mat-dialog-content class="mat-typography">
+  {{'general.confirmationDialog.defaultContent' | translate}}
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button [mat-dialog-close]="false" mat-flat-button>{{'general.actions.cancel' | translate}}</button>
+  <button [mat-dialog-close]="true" color="accent" mat-flat-button>{{'general.actions.confirm' | translate}}</button>
+</mat-dialog-actions>

@@ -1,47 +1,21 @@
-import {Injectable} from "@angular/core";
-import {KeycloakService} from "keycloak-angular";
+import {Injectable} from '@angular/core';
+import {KeycloakService} from 'keycloak-angular';
+import {Role} from '../constants/role';
+import {Objects} from '../../../shared/utils/objects';
 
 /**
  * The service to manage users.
  */
 @Injectable({providedIn: 'root'})
 export class UserService {
+  public static isAuthenticated = false;
+
   /**
    * Create a new instance.
    *
    * @param keycloakService The service to manage keycloak
    */
   constructor(private readonly keycloakService: KeycloakService) {
-  }
-
-  /**
-   * Check if user is authenticated.
-   *
-   * @return TRUE if the user is authenticated, FALSE otherwise
-   */
-  async isAuthenticated(): Promise<boolean> {
-    const token = await this.keycloakService.getToken();
-
-    if (!token) {
-      return false;
-    }
-
-    await this.keycloakService.loadUserProfile()
-
-    return this.keycloakService.isLoggedIn();
-  }
-
-  /**
-   * Get the username.
-   *
-   * @return The username (NULL if not available)
-   */
-  async getUsername(): Promise<string | null> {
-    if (!await this.isAuthenticated()) {
-      return null;
-    }
-
-    return this.keycloakService.getUsername();
   }
 
   /**
@@ -54,14 +28,29 @@ export class UserService {
   }
 
   /**
+   * Check if the authenticated user has the specified role.
+   *
+   * @param requiredRole The required role
+   *
+   * @return TRUE if the authenticated user has the specified role, FALSE otherwise
+   */
+  hasRole(requiredRole?: Role | null) {
+    if (!requiredRole) {
+      return true;
+    }
+
+    return this.hasRoles([requiredRole]);
+  }
+
+  /**
    * Check if the authenticated user has the specified roles.
    *
    * @param requiredRoles The required roles
    *
    * @return TRUE if the authenticated user has the specified roles, FALSE otherwise
    */
-  hasRole(requiredRoles?: Array<string> | null): boolean {
-    if (!requiredRoles || !requiredRoles.length) {
+  hasRoles(requiredRoles?: Array<Role> | null): boolean {
+    if (Objects.isNull(requiredRoles) || !requiredRoles?.length) {
       return true;
     }
 
@@ -73,8 +62,8 @@ export class UserService {
    *
    * @param redirectUri The redirect URI after logout
    */
-  async logout(redirectUri?: string): Promise<void> {
-    return this.keycloakService.logout(redirectUri);
+  logout(redirectUri?: string): void {
+    this.keycloakService.logout(redirectUri).then();
   }
 
   /**
@@ -82,7 +71,7 @@ export class UserService {
    *
    * @param redirectUri The redirect URI after login
    */
-  async login(redirectUri?: string): Promise<void> {
-    return this.keycloakService.login({redirectUri}).then();
+  login(redirectUri?: string): void {
+    this.keycloakService.login({redirectUri}).then();
   }
 }
