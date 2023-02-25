@@ -34,10 +34,10 @@ The project have multiple runners to help developers :
         - OAuth 2.0 Device Authorization Grant : Off
         - OIDC CIBA Grant : Off
     - Update client (koi-wiki-api)
-      - Clients
-        - Valid redirect URIs : *
-        - Valid post logout redirect URIs : *
-        - Web Origins : *
+        - Clients
+            - Valid redirect URIs : *
+            - Valid post logout redirect URIs : *
+            - Web Origins : *
 5. Create all roles in koi-wiki (See section : Keycloak Configuration to see which roles)
 6. Create many groups/users that you need for your tests and developments
     1. (Optional) Create users (See section : Create a user)
@@ -55,12 +55,26 @@ The project have multiple runners to help developers :
             - delete-deleted-article-category
             - search-article-category
             - search-deleted-article-category
+            - create-article
+            - read-article
+            - read-deleted-article
+            - update-article
+            - update-deleted-article
+            - delete-article
+            - delete-deleted-article
+            - search-article
+            - search-deleted-article
         2. User: admin
             - create-article-category
             - read-article-category
             - update-article-category
             - delete-article-category
             - search-article-category
+            - create-article
+            - read-article
+            - update-article
+            - delete-article
+            - search-article
         3. User: user
             - No roles
 
@@ -165,3 +179,12 @@ Koi Wiki app need some realms role :
 - delete-deleted-article-category
 - search-article-category
 - search-deleted-article-category
+- create-article
+- read-article
+- read-deleted-article
+- update-article
+- update-deleted-article
+- delete-article
+- delete-deleted-article
+- search-article
+- search-deleted-article
