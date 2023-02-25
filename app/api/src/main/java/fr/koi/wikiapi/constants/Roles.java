@@ -81,4 +81,29 @@ public final class Roles {
 
         public static final String SEARCH_DELETED = Base.SEARCH_DELETED + "-" + BASE;
     }
+
+    /**
+     * Contains all roles associated to article.
+     */
+    public static final class Article {
+        private static final String BASE = "article";
+
+        public static final String CREATE = Base.CREATE + "-" + BASE;
+
+        public static final String READ = Base.READ + "-" + BASE;
+
+        public static final String READ_DELETED = Base.READ_DELETED + "-" + BASE;
+
+        public static final String UPDATE = Base.UPDATE + "-" + BASE;
+
+        public static final String UPDATE_DELETED = Base.UPDATE_DELETED + "-" + BASE;
+
+        public static final String DELETE = Base.DELETE + "-" + BASE;
+
+        public static final String DELETE_DELETED = Base.DELETE_DELETED + "-" + BASE;
+
+        public static final String SEARCH = Base.SEARCH + "-" + BASE;
+
+        public static final String SEARCH_DELETED = Base.SEARCH_DELETED + "-" + BASE;
+    }
 }

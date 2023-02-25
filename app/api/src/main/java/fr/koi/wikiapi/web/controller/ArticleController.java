@@ -1,6 +1,8 @@
 package fr.koi.wikiapi.web.controller;
 
 import fr.koi.wikiapi.constants.Urls;
+import fr.koi.wikiapi.service.article.ArticleSearchService;
+import fr.koi.wikiapi.service.article.ArticleService;
 import fr.koi.wikiapi.web.model.article.ArticleModel;
 import fr.koi.wikiapi.web.model.article.ArticleSearchCriteria;
 import fr.koi.wikiapi.web.model.article.CreateOrUpdateArticleModel;
@@ -19,6 +21,16 @@ import org.springframework.web.bind.annotation.*;
 public class ArticleController {
 
     /**
+     * The service to manage articles.
+     */
+    private final ArticleService articleService;
+
+    /**
+     * The service to manage article search.
+     */
+    private final ArticleSearchService articleSearchService;
+
+    /**
      * Search entities.
      *
      * @param criteria The criteria
@@ -27,7 +39,7 @@ public class ArticleController {
      */
     @GetMapping(Urls.Article.BASE)
     public Page<ArticleModel> search(final ArticleSearchCriteria criteria) {
-        return null;
+        return this.articleSearchService.search(criteria);
     }
 
     /**
@@ -39,7 +51,7 @@ public class ArticleController {
      */
     @GetMapping(Urls.Article.UNIQUE)
     public ArticleModel getById(@PathVariable final Long id) {
-        return null;
+        return this.articleService.getById(id);
     }
 
     /**
@@ -51,7 +63,7 @@ public class ArticleController {
      */
     @PostMapping(Urls.Article.BASE)
     public ArticleModel create(@RequestBody @Valid final CreateOrUpdateArticleModel data) {
-        return null;
+        return this.articleService.create(data);
     }
 
     /**
@@ -67,7 +79,7 @@ public class ArticleController {
         @PathVariable final Long id,
         @RequestBody @Valid final CreateOrUpdateArticleModel data
     ) {
-        return null;
+        return this.articleService.update(id, data);
     }
 
     /**
@@ -77,5 +89,6 @@ public class ArticleController {
      */
     @DeleteMapping(Urls.Article.UNIQUE)
     public void delete(@PathVariable final Long id) {
+        this.articleService.delete(id);
     }
 }

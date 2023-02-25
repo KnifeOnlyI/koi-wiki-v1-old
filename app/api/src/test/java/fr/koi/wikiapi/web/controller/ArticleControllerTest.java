@@ -1,6 +1,7 @@
 package fr.koi.wikiapi.web.controller;
 
 import fr.koi.wikiapi.constants.Urls;
+import fr.koi.wikiapi.dto.RestPageTestImpl;
 import fr.koi.wikiapi.web.BaseControllerTest;
 import fr.koi.wikiapi.web.model.article.ArticleModel;
 import fr.koi.wikiapi.web.model.article.ArticleSearchCriteria;
@@ -34,7 +35,7 @@ class ArticleControllerTest extends BaseControllerTest {
 
         ArticleSearchCriteria body = new ArticleSearchCriteria();
 
-        ResponseEntity<ArticleModel> deleteResponse = this.restTemplate.exchange(
+        ResponseEntity<RestPageTestImpl<ArticleModel>> response = this.restTemplate.exchange(
             Urls.Article.BASE,
             HttpMethod.GET,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
@@ -42,9 +43,9 @@ class ArticleControllerTest extends BaseControllerTest {
             }
         );
 
-        assertThat(deleteResponse).isNotNull();
-        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(deleteResponse.getBody()).isNotNull();
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isNotNull();
     }
 
     @Test
