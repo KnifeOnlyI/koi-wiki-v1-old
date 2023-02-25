@@ -89,5 +89,59 @@
         "success": "Article category deleted definitively"
       }
     }
+  },
+  "articles": {
+    "title": "Articles",
+    "fields": {
+      "id": {
+        "label": "#"
+      },
+      "title": {
+        "label": "Title",
+        "errors": {
+          "required": "Required field",
+          "maxlength": "Maximum length is 255"
+        }
+      },
+      "description": {
+        "label": "Description",
+        "errors": {
+          "maxlength": "Maximum length is 1000"
+        }
+      },
+      "createdAt": {
+        "label": "Creation date"
+      },
+      "lastUpdateAt": {
+        "label": "Last update date"
+      },
+      "deletedAt": {
+        "label": "Deletion date"
+      }
+    },
+    "editor": {
+      "title": {
+        "create": "Create new article",
+        "edit": "Edit article"
+      }
+    },
+    "actions": {
+      "create": {
+        "button": "Create new",
+        "success": "Article created"
+      },
+      "edit": {
+        "label": "Edit",
+        "success": "Article updated"
+      },
+      "delete": {
+        "label": "Delete",
+        "success": "Article deleted"
+      },
+      "deleteForever": {
+        "label": "Delete forever",
+        "success": "Article deleted definitively"
+      }
+    }
   }
 }

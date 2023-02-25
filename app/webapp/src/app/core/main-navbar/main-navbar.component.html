@@ -2,9 +2,14 @@
   <a [routerLink]="''" class="navbar-item-home" color="primary" mat-flat-button type="button">
     {{appTitle}}
   </a>
-  <a *ngIf="showArticleCategoriesActionButton" [routerLink]="['articles-categories']" class="navbar-item"
-     color="primary" mat-flat-button type="button">
+  <a *ngIf="showArticleCategoriesActionButton" [routerLink]="['articles-categories']" class="navbar-item" color="primary"
+     mat-flat-button type="button">
     {{'articles-categories.title' | translate}}
+  </a>
+
+  <a *ngIf="showArticleActionButton" [routerLink]="['articles']" class="navbar-item" color="primary" mat-flat-button
+     type="button">
+    {{'articles.title' | translate}}
   </a>
 
   <button (click)="login()"

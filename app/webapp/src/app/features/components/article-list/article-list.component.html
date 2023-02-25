@@ -1,0 +1,117 @@
+<div *ngIf="showActionsBar" class="actions-bar">
+  <a [routerLink]="['/articles', 'create']" color="primary"
+     mat-flat-button>{{'articles.actions.create.button' | translate}}</a>
+</div>
+
+<table (matSortChange)="onSortChange($event)"
+       *ngIf="data"
+       [dataSource]="data.content"
+       [formGroup]="searchForm"
+       mat-table
+       matSort>
+
+  <ng-container matColumnDef="id">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="id">
+      {{'articles.fields.id.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      {{element.id}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="title">
+    <th *matHeaderCellDef mat-header-cell>
+      {{'articles.fields.title.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      {{element.title}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="description">
+      {{'articles.fields.description.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      {{element.description}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAt">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="createdAt">
+      {{'articles.fields.createdAt.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <app-date-viewer [date]="element.createdAt"></app-date-viewer>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="lastUpdateAt">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="lastUpdateAt">
+      {{'articles.fields.lastUpdateAt.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <app-date-viewer [date]="element.lastUpdateAt"></app-date-viewer>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="deletedAt">
+    <th *matHeaderCellDef mat-header-cell mat-sort-header="deletedAt">
+      {{'articles.fields.deletedAt.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <app-date-viewer [date]="element.deletedAt"></app-date-viewer>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th *matHeaderCellDef mat-header-cell>
+      {{'general.actions.actions' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <button [matMenuTriggerFor]="menu" mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #menu="matMenu">
+        <ng-container *ngIf="!element.deletedAt; else actionsOnDeletedArticle">
+          <a *ngIf="showEditArticleButton" [routerLink]="['/articles', 'edit', element.id]"
+             mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            <span>{{'articles.actions.edit.label' | translate}}</span>
+          </a>
+
+          <button (click)="onDelete(element.id)" *ngIf="showDeleteArticleButton" mat-menu-item>
+            <mat-icon>delete</mat-icon>
+            <span>{{'articles.actions.delete.label' | translate}}</span>
+          </button>
+        </ng-container>
+        <ng-template #actionsOnDeletedArticle>
+          <a *ngIf="showEditDeletedArticleButton" [routerLink]="['/articles', 'edit', element.id]"
+             mat-menu-item>
+            <mat-icon>edit</mat-icon>
+            <span>{{'articles.actions.edit.label' | translate}}</span>
+          </a>
+
+          <button (click)="onDelete(element.id)" *ngIf="showDeleteDeletedArticleButton" mat-menu-item>
+            <mat-icon>delete_forever</mat-icon>
+            <span>{{'articles.actions.deleteForever.label' | translate}}</span>
+          </button>
+        </ng-template>
+      </mat-menu>
+    </td>
+  </ng-container>
+
+  <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+</table>
+
+<mat-paginator
+  (page)="onPaginationChange($event)"
+  [length]="data?.totalElements"
+  [pageSizeOptions]="[10, 20, 50, 100]"
+  [pageSize]="pageSize"
+  [showFirstLastButtons]="true">
+</mat-paginator>
+
+

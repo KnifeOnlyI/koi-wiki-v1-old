@@ -11,4 +11,14 @@ export enum Role {
   DELETE_DELETED_ARTICLE_CATEGORY = 'delete-deleted-article-category',
   SEARCH_ARTICLE_CATEGORY = 'search-article-category',
   SEARCH_DELETED_ARTICLE_CATEGORY = 'search-deleted-article-category',
+
+  CREATE_ARTICLE = 'create-article',
+  READ_ARTICLE = 'read-article',
+  READ_DELETED_ARTICLE = 'read-deleted-article',
+  UPDATE_ARTICLE = 'update-article',
+  UPDATED_DELETED_ARTICLE = 'update-deleted-article',
+  DELETE_ARTICLE = 'delete-article',
+  DELETE_DELETED_ARTICLE = 'delete-deleted-article',
+  SEARCH_ARTICLE = 'search-article',
+  SEARCH_DELETED_ARTICLE = 'search-deleted-article',
 }

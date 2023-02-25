@@ -1,0 +1,42 @@
+<div class="root">
+  <h1 *ngIf="!articleId" class="title">{{'articles.editor.title.create' | translate}}</h1>
+  <h1 *ngIf="articleId" class="title">{{'articles.editor.title.edit' | translate}}</h1>
+
+  <form (reset)="onReset($event)" (submit)="onSubmit()" [formGroup]="form" class="form">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-input">
+        <mat-label>{{'articles.fields.title.label' | translate}}</mat-label>
+        <input formControlName="title" matInput placeholder="{{'filter.placeholder.label' | translate}}">
+        <mat-error>
+          {{form.controls.title.errors|TranslateFirstError:'articles.fields.title.errors'}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="form-input">
+        <mat-label>{{'articles.fields.description.label' | translate}}</mat-label>
+        <textarea formControlName="description" matInput
+                  placeholder="{{'filter.placeholder.label' | translate}}"></textarea>
+        <mat-error>
+          {{form.controls.description.errors|TranslateFirstError:'articles.fields.description.errors'}}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-actions">
+      <button [disabled]="form.pristine"
+              class="mat-primary form-actions-reset"
+              mat-flat-button
+              type="reset">
+        {{'general.actions.reset' | translate}}
+      </button>
+      <button [disabled]="form.pristine || !form.valid"
+              class="mat-primary form-actions-save"
+              mat-flat-button
+              type="submit">
+        {{'general.actions.save' | translate}}
+      </button>
+    </div>
+  </form>
+</div>
+

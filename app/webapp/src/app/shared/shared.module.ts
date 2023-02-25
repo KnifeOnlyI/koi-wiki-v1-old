@@ -13,6 +13,7 @@ import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {SnackbarService} from './services/snackbar/snackbar.service';
+import {ArticleService} from './services/article/article.service';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {SnackbarService} from './services/snackbar/snackbar.service';
   ],
   providers: [
     ArticleCategoryService,
+    ArticleService,
     DateService,
     SnackbarService,
     {

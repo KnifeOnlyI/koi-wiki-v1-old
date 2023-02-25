@@ -2,6 +2,7 @@ import {Routes} from '@angular/router';
 import {HomeComponent} from './features/pages/home/home.component';
 import {NotFoundComponent} from './features/pages/not-found/not-found.component';
 import {ARTICLE_CATEGORY_ROUTES} from './routes/article-category.routes';
+import {ARTICLE_ROUTES} from './routes/article.routes';
 
 const ROUTES: Routes = [];
 
@@ -11,6 +12,7 @@ ROUTES.push({
 });
 
 ARTICLE_CATEGORY_ROUTES.forEach(route => ROUTES.push(route));
+ARTICLE_ROUTES.forEach(route => ROUTES.push(route));
 
 ROUTES.push({
     path: 'not-found',

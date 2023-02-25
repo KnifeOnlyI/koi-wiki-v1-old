@@ -15,6 +15,7 @@ export class MainNavbarComponent {
    */
   appTitle = environment.appTitle;
   showArticleCategoriesActionButton: boolean;
+  showArticleActionButton: boolean;
 
   /**
    * Create a new instance.
@@ -26,6 +27,11 @@ export class MainNavbarComponent {
     this.showArticleCategoriesActionButton = this.userService.hasRoles([
       Role.READ_ARTICLE_CATEGORY,
       Role.SEARCH_ARTICLE_CATEGORY,
+    ]);
+
+    this.showArticleActionButton = this.userService.hasRoles([
+      Role.READ_ARTICLE,
+      Role.SEARCH_ARTICLE,
     ]);
   }
 

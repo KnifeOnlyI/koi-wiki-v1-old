@@ -17,6 +17,8 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {CoreModule} from '../core/core.module';
+import {ArticleListComponent} from './components/article-list/article-list.component';
+import {ArticleEditorComponent} from './components/article-editor/article-editor.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import {CoreModule} from '../core/core.module';
     NotFoundComponent,
     ArticleCategoryListComponent,
     ArticleCategoryEditorComponent,
+    ArticleListComponent,
+    ArticleEditorComponent,
   ],
   imports: [
     SharedModule,

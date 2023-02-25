@@ -11,8 +11,6 @@ import {CoreModule} from './core/core.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import ROUTES from './app.routes';
 
-console.debug('ROUTES', ROUTES);
-
 @NgModule({
   declarations: [
     AppComponent,
