@@ -14,4 +14,22 @@
 
         <sql>alter sequence article_category_id_seq restart with (select max(id) + 1 from article_category)</sql>
     </changeSet>
+
+    <changeSet id="test-article" author="knife">
+        <loadData usePreparedStatements="true"
+                  tableName="article"
+                  file="changelog-test/article.csv"
+                  relativeToChangelogFile="true"/>
+
+        <sql>alter sequence article_id_seq restart with (select max(id) + 1 from article)</sql>
+    </changeSet>
+
+    <changeSet id="test-article-article-category" author="knife">
+        <loadData usePreparedStatements="true"
+                  tableName="article_article_category"
+                  file="changelog-test/article-article-category.csv"
+                  relativeToChangelogFile="true"/>
+
+        <sql>alter sequence article_id_seq restart with (select max(id) + 1 from article)</sql>
+    </changeSet>
 </databaseChangeLog>

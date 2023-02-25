@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="0.0.2-article-create-structure" author="knife">
+        <createTable tableName="article">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" unique="true"/>
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="varchar(65000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_update_at" type="timestamp with time zone"/>
+            <column name="deleted_at" type="timestamp with time zone"/>
+        </createTable>
+
+        <createSequence sequenceName="article_id_seq" incrementBy="1" minValue="1" startValue="1"/>
+
+        <createIndex tableName="article" indexName="idx_article_title">
+            <column name="title"/>
+        </createIndex>
+        <createIndex tableName="article" indexName="idx_article_description">
+            <column name="description"/>
+        </createIndex>
+        <createIndex tableName="article" indexName="idx_article_content">
+            <column name="content"/>
+        </createIndex>
+        <createIndex tableName="article" indexName="idx_article_deleted_at">
+            <column name="deleted_at"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

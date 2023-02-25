@@ -34,4 +34,19 @@ public final class Urls {
          */
         public static final String UNIQUE = BASE + "/{id}";
     }
+
+    /**
+     * Contains all article urls.
+     */
+    public static final class Article {
+        /**
+         * The base url.
+         */
+        public static final String BASE = VERSION + "/articles";
+
+        /**
+         * The url for unique selection.
+         */
+        public static final String UNIQUE = BASE + "/{id}";
+    }
 }

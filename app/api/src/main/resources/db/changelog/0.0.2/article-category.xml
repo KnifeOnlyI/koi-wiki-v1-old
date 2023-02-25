@@ -4,6 +4,9 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="0.0.1/index.xml" relativeToChangelogFile="true"/>
-    <include file="0.0.2/index.xml" relativeToChangelogFile="true"/>
+    <changeSet id="0.0.2-article-category-add-index" author="knife">
+        <createIndex tableName="article_category" indexName="idx_article_category_description">
+            <column name="description"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>
