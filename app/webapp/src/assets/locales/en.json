@@ -109,6 +109,12 @@
           "maxlength": "Maximum length is 1000"
         }
       },
+      "isArchived": {
+        "label": "Archived"
+      },
+      "authorId": {
+        "label": "Author"
+      },
       "createdAt": {
         "label": "Creation date"
       },

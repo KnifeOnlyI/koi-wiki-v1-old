@@ -37,6 +37,24 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="isArchived">
+    <th *matHeaderCellDef mat-header-cell>
+      {{'articles.fields.isArchived.label' | translate}}&nbsp;?
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      {{element.isArchived}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="authorId">
+    <th *matHeaderCellDef mat-header-cell>
+      {{'articles.fields.authorId.label' | translate}}
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <app-user-viewer [userId]="element.authorId"></app-user-viewer>
+    </td>
+  </ng-container>
+
   <ng-container matColumnDef="createdAt">
     <th *matHeaderCellDef mat-header-cell mat-sort-header="createdAt">
       {{'articles.fields.createdAt.label' | translate}}

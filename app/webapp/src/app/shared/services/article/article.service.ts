@@ -31,6 +31,8 @@ export class ArticleService {
    * @param pageSize The page size
    * @param sort The sorting property and direction
    * @param deleted The deleted criteria
+   * @param archived The archived criteria
+   * @param authorId The ID of author
    * @param q The query string criteria
    */
   search(
@@ -38,6 +40,8 @@ export class ArticleService {
     pageSize?: number | null,
     sort?: string | null,
     deleted?: boolean | null,
+    archived?: boolean | null,
+    authorId?: string | null,
     q?: string | null,
   ): Observable<PageableModel<ArticleModel>> {
     const params = {} as any;
@@ -56,6 +60,14 @@ export class ArticleService {
 
     if (!Objects.isNull(deleted)) {
       params.deleted = deleted;
+    }
+
+    if (!Objects.isNull(archived)) {
+      params.archived = archived;
+    }
+
+    if (!Objects.isBlank(authorId)) {
+      params.authorId = authorId;
     }
 
     if (!Objects.isBlank(q)) {

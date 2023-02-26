@@ -20,6 +20,24 @@ public final class Urls {
     private Urls() {
     }
 
+    public static final class User {
+        /**
+         * The base url.
+         */
+        public static final String BASE = VERSION + "/users";
+
+        /**
+         * The url for unique selection.
+         */
+        public static final String UNIQUE = BASE + "/{id}";
+
+        /**
+         * Hidden constructor.
+         */
+        private User() {
+        }
+    }
+
     /**
      * Contains all article category urls.
      */
@@ -33,6 +51,12 @@ public final class Urls {
          * The url for unique selection.
          */
         public static final String UNIQUE = BASE + "/{id}";
+
+        /**
+         * Hidden constructor.
+         */
+        private ArticleCategory() {
+        }
     }
 
     /**
@@ -48,5 +72,11 @@ public final class Urls {
          * The url for unique selection.
          */
         public static final String UNIQUE = BASE + "/{id}";
+
+        /**
+         * Hidden constructor.
+         */
+        private Article() {
+        }
     }
 }

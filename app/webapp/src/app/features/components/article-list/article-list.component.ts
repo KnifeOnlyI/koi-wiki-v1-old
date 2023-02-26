@@ -38,6 +38,8 @@ export class ArticleListComponent {
     'id',
     'title',
     'description',
+    'isArchived',
+    'authorId',
     'createdAt',
     'lastUpdateAt',
     'deletedAt',
@@ -96,6 +98,16 @@ export class ArticleListComponent {
   private readonly canSearchDeletedArticle: boolean;
 
   /**
+   * The flag to indicates if the user can search archived article.
+   */
+  private readonly canSearchArchivedArticle: boolean;
+
+  /**
+   * The flag to indicates if the user can search archived article of other users.
+   */
+  private readonly canSearchOtherArchivedArticle: boolean;
+
+  /**
    * Create a new instance.
    *
    * @param articleService The service to manage article
@@ -130,6 +142,8 @@ export class ArticleListComponent {
     }
 
     this.canSearchDeletedArticle = canReadDeletedArticle && this.userService.hasRole(Role.SEARCH_DELETED_ARTICLE);
+    this.canSearchArchivedArticle = this.userService.hasRole(Role.SEARCH_ARCHIVED_ARTICLE);
+    this.canSearchOtherArchivedArticle = this.userService.hasRole(Role.SEARCH_OTHER_ARCHIVED_ARTICLE);
 
     this.refresh();
 
@@ -179,12 +193,16 @@ export class ArticleListComponent {
    */
   private refresh(): void {
     const deleted = !this.canSearchDeletedArticle ? false : undefined;
+    const archived = !this.canSearchArchivedArticle ? false : undefined;
+    const author = !this.canSearchOtherArchivedArticle ? this.userService.userId : undefined;
 
     this.articleService.search(
       this.page,
       this.pageSize,
       this.sort,
       deleted,
+      archived,
+      author,
       this.searchForm.controls.q.value,
     ).subscribe((results) => this.data = results);
   }

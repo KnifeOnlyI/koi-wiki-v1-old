@@ -1,4 +1,4 @@
-package fr.koi.wikiapi.web.controller;
+package fr.koi.wikiapi.web.controller.article;
 
 import fr.koi.wikiapi.constants.Urls;
 import fr.koi.wikiapi.service.article.ArticleSearchService;

@@ -14,6 +14,9 @@ export class MainNavbarComponent {
    * The app title.
    */
   appTitle = environment.appTitle;
+  userId?: string;
+  username?: string;
+
   showArticleCategoriesActionButton: boolean;
   showArticleActionButton: boolean;
 
@@ -33,13 +36,16 @@ export class MainNavbarComponent {
       Role.READ_ARTICLE,
       Role.SEARCH_ARTICLE,
     ]);
+
+    this.userId = this.userService.userId;
+    this.username = this.userService.username;
   }
 
   /**
    * Perform a login.
    */
   login(): void {
-    if (!UserService.isAuthenticated) {
+    if (!this.userService.isAuthenticated) {
       this.userService.login(window.location.origin + this.router.routerState.snapshot.url);
     }
   }
@@ -48,7 +54,7 @@ export class MainNavbarComponent {
    * Perform a logout.
    */
   logout(): void {
-    if (UserService.isAuthenticated) {
+    if (this.userService.isAuthenticated) {
       this.userService.logout(window.location.origin);
     }
   }

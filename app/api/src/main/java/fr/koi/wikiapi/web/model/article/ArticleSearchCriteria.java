@@ -34,7 +34,7 @@ public class ArticleSearchCriteria {
     /**
      * The author criteria.
      */
-    private String author;
+    private String authorId;
 
     /**
      * TRUE to include archived entities in the results, FALSE otherwise.

@@ -27,8 +27,8 @@ export class AuthGuard extends KeycloakAuthGuard {
   }
 
   async isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean | UrlTree> {
-    if (!UserService.isAuthenticated) {
-      await this.userService.login(window.location.origin + state.url)
+    if (!this.userService.isAuthenticated) {
+      await this.userService.login(window.location.origin + state.url);
     }
 
     return this.userService.hasRoles(route.data['roles']);

@@ -17,3 +17,5 @@ koi-wiki:
       authorized-token-issuer: ${KOI_WIKI_KEYCLOAK_AUTHORIZED_TOKEN_ISSUER}
       realm: ${KOI_WIKI_KEYCLOAK_REALM}
       client-id: ${KOI_WIKI_KEYCLOAK_CLIENT_ID}
+      master-admin-username: ${KOI_WIKI_KEYCLOAK_MASTER_ADMIN_USERNAME}
+      master-admin-password: ${KOI_WIKI_KEYCLOAK_MASTER_ADMIN_PASSWORD}

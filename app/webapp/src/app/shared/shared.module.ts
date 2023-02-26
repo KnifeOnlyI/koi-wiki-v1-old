@@ -14,6 +14,8 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {SnackbarService} from './services/snackbar/snackbar.service';
 import {ArticleService} from './services/article/article.service';
+import {UserViewerComponent} from './components/user-viewer/user-viewer.component';
+import {AsyncPipe, NgIf} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -22,12 +24,15 @@ import {ArticleService} from './services/article/article.service';
     DateViewerComponent,
     TranslateFirstErrorPipe,
     ConfirmDialogComponent,
+    UserViewerComponent,
   ],
   imports: [
     TranslateModule.forRoot(translateConfiguration),
     MatTooltipModule,
     MatDialogModule,
     MatButtonModule,
+    AsyncPipe,
+    NgIf,
   ],
   exports: [
     TranslateModule,
@@ -35,6 +40,7 @@ import {ArticleService} from './services/article/article.service';
     IsAnonymousDirective,
     DateViewerComponent,
     TranslateFirstErrorPipe,
+    UserViewerComponent,
   ],
   providers: [
     ArticleCategoryService,

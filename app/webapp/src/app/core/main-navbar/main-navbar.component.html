@@ -2,7 +2,8 @@
   <a [routerLink]="''" class="navbar-item-home" color="primary" mat-flat-button type="button">
     {{appTitle}}
   </a>
-  <a *ngIf="showArticleCategoriesActionButton" [routerLink]="['articles-categories']" class="navbar-item" color="primary"
+  <a *ngIf="showArticleCategoriesActionButton" [routerLink]="['articles-categories']" class="navbar-item"
+     color="primary"
      mat-flat-button type="button">
     {{'articles-categories.title' | translate}}
   </a>
@@ -29,6 +30,7 @@
           mat-flat-button
           type="button"
   >
-    {{'auth.actions.logout.label' | translate}}
+    {{'auth.actions.logout.label' | translate}}&nbsp;-
+    <app-user-viewer [userIdTooltip]="true" [userId]="userId"></app-user-viewer>
   </button>
 </nav>

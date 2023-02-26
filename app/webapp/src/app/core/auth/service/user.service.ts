@@ -2,27 +2,56 @@ import {Injectable} from '@angular/core';
 import {KeycloakService} from 'keycloak-angular';
 import {Role} from '../constants/role';
 import {Objects} from '../../../shared/utils/objects';
+import {JwtService} from '../../service/jwt.service';
+import {JwtToken} from '../models/jwt-token';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../../environments/environment';
+import {Observable} from 'rxjs';
+import {UsernameModel} from '../models/username.model';
 
 /**
  * The service to manage users.
  */
-@Injectable({providedIn: 'root'})
+@Injectable()
 export class UserService {
-  public static isAuthenticated = false;
+  /**
+   * The flag to indicates if the user is authenticated.
+   */
+  public readonly isAuthenticated: boolean;
+  /**
+   * The username of currently logged user.
+   */
+  public readonly username?: string;
+  /**
+   * The ID of currently logged user.
+   */
+  public readonly userId?: string;
+  /**
+   * The base URL of REST resource to manage users.
+   */
+  private readonly baseResourceUrl = `${environment.baseApiUrl}/users`;
+  /**
+   * The token of the currently logger user.
+   */
+  private readonly token: JwtToken | null;
 
   /**
    * Create a new instance.
    *
    * @param keycloakService The service to manage keycloak
+   * @param jwtService The service to manage JWT tokens
+   * @param http The service to manage HTTP requests
    */
-  constructor(private readonly keycloakService: KeycloakService) {
-  }
+  constructor(
+    private readonly keycloakService: KeycloakService,
+    private readonly jwtService: JwtService,
+    private readonly http: HttpClient,
+  ) {
+    this.token = this.jwtService.decode(this.keycloakService.getKeycloakInstance().token);
 
-  /**
-   * Get the user ID.
-   */
-  getUserId(): string {
-    return this.keycloakService.getKeycloakInstance().subject!;
+    this.isAuthenticated = !Objects.isNull(this.token);
+    this.userId = this.token?.payload.sub;
+    this.username = this.token?.payload.preferred_username;
   }
 
   /**
@@ -80,5 +109,16 @@ export class UserService {
    */
   login(redirectUri?: string): void {
     this.keycloakService.login({redirectUri}).then();
+  }
+
+  /**
+   * Get a username from the specified ID.
+   *
+   * @param userId The user ID
+   *
+   * @return The corresponding username (NULL if not found corresponding username)
+   */
+  getUsernameFromId(userId: string): Observable<UsernameModel | null> {
+    return this.http.get(`${this.baseResourceUrl}/${userId}`);
   }
 }

@@ -76,7 +76,7 @@ public class ArticleSearchService {
             throw new ForbiddenException();
         }
 
-        if (criteria.getAuthor() == null || !this.userService.getUserId().equals(criteria.getAuthor())) {
+        if (criteria.getAuthorId() == null || !this.userService.getUserId().equals(criteria.getAuthorId())) {
             if (((criteria.getArchived() == null || criteria.getArchived())
                 && !this.userService.hasRole(Roles.Article.SEARCH_OTHER_ARCHIVED))
             ) {
@@ -131,6 +131,9 @@ public class ArticleSearchService {
                 ? qArticle.isArchived.isNotNull()
                 : qArticle.isArchived.isNull()
             ));
+
+        Optional.ofNullable(criteria.getAuthorId())
+            .ifPresent(value -> whereFilters.add(qArticle.authorId.eq(value)));
 
         Optional.ofNullable(criteria.getQ())
             .ifPresent(value -> whereFilters.add(qArticle.title.containsIgnoreCase(value)

@@ -12,9 +12,10 @@ export class IsAuthenticatedDirective {
    * Create a new instance.
    *
    * @param elementRef The HTML element ref
+   * @param userService The service to manage users
    */
-  constructor(private elementRef: ElementRef) {
-    if (!UserService.isAuthenticated) {
+  constructor(private elementRef: ElementRef, private readonly userService: UserService) {
+    if (!this.userService.isAuthenticated) {
       elementRef.nativeElement.remove();
     }
   }

@@ -6,6 +6,9 @@ import {MainNavbarComponent} from './main-navbar/main-navbar.component';
 import {RouterLink} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {NgClass, NgIf} from '@angular/common';
+import {UserService} from './auth/service/user.service';
+import {JwtService} from './service/jwt.service';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -18,6 +21,7 @@ import {NgClass, NgIf} from '@angular/common';
     MatButtonModule,
     NgClass,
     NgIf,
+    MatTooltipModule,
   ],
   exports: [
     MainNavbarComponent,
@@ -29,6 +33,8 @@ import {NgClass, NgIf} from '@angular/common';
       multi: true,
       deps: [KeycloakService],
     },
+    UserService,
+    JwtService,
   ],
 })
 export class CoreModule {

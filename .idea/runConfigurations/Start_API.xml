@@ -13,6 +13,8 @@
       <env name="KOI_WIKI_KEYCLOAK_HOST" value="http://localhost" />
       <env name="KOI_WIKI_KEYCLOAK_PORT" value="8082" />
       <env name="KOI_WIKI_KEYCLOAK_REALM" value="koi-wiki" />
+      <env name="KOI_WIKI_KEYCLOAK_MASTER_ADMIN_USERNAME" value="admin" />
+      <env name="KOI_WIKI_KEYCLOAK_MASTER_ADMIN_PASSWORD" value="admin" />
     </envs>
     <module name="koi-wiki-api" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="fr.koi.wikiapi.KoiWikiApplication" />
