@@ -16,6 +16,7 @@ import {SnackbarService} from './services/snackbar/snackbar.service';
 import {ArticleService} from './services/article/article.service';
 import {UserViewerComponent} from './components/user-viewer/user-viewer.component';
 import {AsyncPipe, NgIf} from '@angular/common';
+import {BooleanViewerComponent} from './components/boolean-viewer/boolean-viewer.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import {AsyncPipe, NgIf} from '@angular/common';
     TranslateFirstErrorPipe,
     ConfirmDialogComponent,
     UserViewerComponent,
+    BooleanViewerComponent,
   ],
   imports: [
     TranslateModule.forRoot(translateConfiguration),
@@ -41,6 +43,7 @@ import {AsyncPipe, NgIf} from '@angular/common';
     DateViewerComponent,
     TranslateFirstErrorPipe,
     UserViewerComponent,
+    BooleanViewerComponent,
   ],
   providers: [
     ArticleCategoryService,

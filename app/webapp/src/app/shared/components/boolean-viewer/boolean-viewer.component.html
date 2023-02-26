@@ -1,0 +1,4 @@
+<ng-container *ngIf="value !== undefined && value !== null">
+  <span *ngIf="value">{{'general.boolean.true' | translate}}</span>
+  <span *ngIf="!value">{{'general.boolean.false' | translate}}</span>
+</ng-container>

@@ -1,5 +1,9 @@
 {
   "general": {
+    "boolean": {
+      "true": "yes",
+      "false": "no"
+    },
     "actions": {
       "actions": "Actions",
       "save": "Save",

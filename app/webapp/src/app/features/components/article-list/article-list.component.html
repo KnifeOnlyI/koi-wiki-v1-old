@@ -42,7 +42,7 @@
       {{'articles.fields.isArchived.label' | translate}}&nbsp;?
     </th>
     <td *matCellDef="let element" mat-cell>
-      {{element.isArchived}}
+      <app-boolean-viewer [value]="element.isArchived"></app-boolean-viewer>
     </td>
   </ng-container>
 

@@ -15,10 +15,15 @@ export class ArticleEditorComponent {
   readonly articleId: number | undefined;
   readonly form = new FormGroup({
     title: new FormControl('', {nonNullable: true, validators: [Validators.required, Validators.maxLength(255)]}),
-    description: new FormControl<string>(undefined as unknown as any, {
+    description: new FormControl('', {
       nonNullable: true,
       validators: [Validators.maxLength(1000)],
     }),
+    content: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.maxLength(65000)],
+    }),
+    isArchived: new FormControl(true),
   });
 
   articleModel?: ArticleModel;

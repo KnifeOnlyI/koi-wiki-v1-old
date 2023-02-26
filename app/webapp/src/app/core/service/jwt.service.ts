@@ -28,10 +28,6 @@ export class JwtService {
     const header = JSON.parse(atob(parts![0]));
     const payload = JSON.parse(atob(parts![1]));
 
-    console.debug({
-      header, payload,
-    });
-
     return {
       header,
       payload,

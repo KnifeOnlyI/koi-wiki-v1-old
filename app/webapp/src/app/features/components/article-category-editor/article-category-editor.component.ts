@@ -15,7 +15,7 @@ export class ArticleCategoryEditorComponent {
   readonly articleId: number | undefined;
   readonly form = new FormGroup({
     name: new FormControl('', {nonNullable: true, validators: [Validators.required, Validators.maxLength(255)]}),
-    description: new FormControl<string>(undefined as unknown as any, {
+    description: new FormControl('', {
       nonNullable: true,
       validators: [Validators.maxLength(1000)],
     }),
