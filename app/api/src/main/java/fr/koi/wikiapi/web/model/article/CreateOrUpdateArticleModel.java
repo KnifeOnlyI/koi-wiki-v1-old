@@ -1,6 +1,7 @@
 package fr.koi.wikiapi.web.model.article;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -33,6 +34,12 @@ public class CreateOrUpdateArticleModel {
      */
     @Length(max = 65000)
     private String content;
+
+    /**
+     * The flag to indicates if the article is archived.
+     */
+    @NotNull
+    private Boolean isArchived;
 
     /**
      * The associated categories.

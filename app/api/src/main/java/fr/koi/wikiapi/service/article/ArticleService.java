@@ -3,6 +3,7 @@ package fr.koi.wikiapi.service.article;
 import fr.koi.wikiapi.domain.ArticleEntity;
 import fr.koi.wikiapi.mapper.ArticleMapper;
 import fr.koi.wikiapi.repository.dao.ArticleDao;
+import fr.koi.wikiapi.service.user.UserService;
 import fr.koi.wikiapi.web.model.article.ArticleModel;
 import fr.koi.wikiapi.web.model.article.CreateOrUpdateArticleModel;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,11 @@ public class ArticleService {
     private final ArticleMapper articleMapper;
 
     /**
+     * The service to manage users.
+     */
+    private final UserService userService;
+
+    /**
      * Get a model with the specified ID and throw an error if not exists.
      *
      * @param id The ID
@@ -43,7 +49,8 @@ public class ArticleService {
      * @return A model that represent the created entity
      */
     public ArticleModel create(final CreateOrUpdateArticleModel data) {
-        ArticleEntity entity = this.articleMapper.toEntity(data);
+        ArticleEntity entity = this.articleMapper.toEntity(data)
+            .setAuthorId(this.userService.getUserId());
 
         this.articleDao.save(entity);
 

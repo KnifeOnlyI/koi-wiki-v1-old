@@ -11,6 +11,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     /**
+     * Get the user ID.
+     *
+     * @return The user ID
+     */
+    public String getUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return authentication != null ? authentication.getName() : null;
+    }
+
+    /**
      * Check if the connected user has the specified role.
      *
      * @param role The expected role

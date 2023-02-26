@@ -70,6 +70,26 @@ public class ArticleSearchService {
             throw new ForbiddenException();
         }
 
+        if (((criteria.getArchived() == null || criteria.getArchived())
+            && !this.userService.hasRole(Roles.Article.SEARCH_ARCHIVED))
+        ) {
+            throw new ForbiddenException();
+        }
+
+        if (criteria.getAuthor() == null || !this.userService.getUserId().equals(criteria.getAuthor())) {
+            if (((criteria.getArchived() == null || criteria.getArchived())
+                && !this.userService.hasRole(Roles.Article.SEARCH_OTHER_ARCHIVED))
+            ) {
+                throw new ForbiddenException();
+            }
+
+            if (((criteria.getDeleted() == null || criteria.getDeleted())
+                && !this.userService.hasRole(Roles.Article.SEARCH_OTHER_DELETED))
+            ) {
+                throw new ForbiddenException();
+            }
+        }
+
         JPAQuery<ArticleEntity> query = this.buildQuery(criteria);
         Pageable pageable = PageRequest.of(criteria.getPage(), criteria.getPageSize());
 
@@ -104,6 +124,12 @@ public class ArticleSearchService {
             .ifPresent(value -> whereFilters.add(criteria.getDeleted()
                 ? qArticle.deletedAt.isNotNull()
                 : qArticle.deletedAt.isNull()
+            ));
+
+        Optional.ofNullable(criteria.getArchived())
+            .ifPresent(value -> whereFilters.add(criteria.getArchived()
+                ? qArticle.isArchived.isNotNull()
+                : qArticle.isArchived.isNull()
             ));
 
         Optional.ofNullable(criteria.getQ())

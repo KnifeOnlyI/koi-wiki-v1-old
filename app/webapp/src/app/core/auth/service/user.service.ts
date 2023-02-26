@@ -19,6 +19,13 @@ export class UserService {
   }
 
   /**
+   * Get the user ID.
+   */
+  getUserId(): string {
+    return this.keycloakService.getKeycloakInstance().subject!;
+  }
+
+  /**
    * Get user roles.
    *
    * @return The user roles

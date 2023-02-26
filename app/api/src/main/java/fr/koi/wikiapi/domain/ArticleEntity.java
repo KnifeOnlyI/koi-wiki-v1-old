@@ -44,6 +44,18 @@ public class ArticleEntity {
     private String content;
 
     /**
+     * The flag to indicates if the article is archived.
+     */
+    @Column
+    private Boolean isArchived;
+
+    /**
+     * The author ID.
+     */
+    @Column
+    private String authorId;
+
+    /**
      * The categories.
      */
     @ManyToMany

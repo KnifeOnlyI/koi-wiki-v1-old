@@ -40,4 +40,25 @@
             <column name="deleted_at"/>
         </createIndex>
     </changeSet>
+
+    <changeSet id="0.0.2-article-create-structure-2" author="knife">
+        <addColumn tableName="article">
+            <column name="is_archived" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="article">
+            <column name="author_id" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <createIndex tableName="article" indexName="idx_article_is_archived">
+            <column name="is_archived"/>
+        </createIndex>
+        <createIndex tableName="article" indexName="idx_article_author_id">
+            <column name="author_id"/>
+        </createIndex>
+    </changeSet>
 </databaseChangeLog>

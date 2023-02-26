@@ -46,11 +46,40 @@ class ArticleDaoTest extends BaseTest {
     }
 
     @Test
+    void testGetByIdWithoutReadOtherDeletedRole() {
+        ArticleEntity entity = new ArticleEntity().setId(1L)
+            .setAuthorId("root")
+            .setDeletedAt(this.getNowZonedDateTime());
+
+        when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.READ_OTHER_DELETED)).thenReturn(false);
+        when(this.userService.getUserId()).thenReturn("user");
+        when(this.articleRepository.findById(entity.getId())).thenReturn(Optional.of(entity));
+
+        assertThatThrownBy(() -> this.articleDao.getById(1L))
+            .isOfAnyClassIn(NotFoundArticleException.class);
+    }
+
+    @Test
+    void testGetByIdWithoutReadOtherArchivedRole() {
+        ArticleEntity entity = new ArticleEntity().setId(1L).setAuthorId("root").setIsArchived(true);
+
+        when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.READ_OTHER_ARCHIVED)).thenReturn(false);
+        when(this.userService.getUserId()).thenReturn("user");
+        when(this.articleRepository.findById(entity.getId())).thenReturn(Optional.of(entity));
+
+        assertThatThrownBy(() -> this.articleDao.getById(1L))
+            .isOfAnyClassIn(NotFoundArticleException.class);
+    }
+
+    @Test
     void testGetByIdWithReadRole() {
-        ArticleEntity mockData = new ArticleEntity().setId(1L);
+        ArticleEntity mockData = new ArticleEntity().setId(1L).setAuthorId("root");
 
         when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(false);
         when(this.userService.hasRole(Roles.Article.READ)).thenReturn(true);
+        when(this.userService.getUserId()).thenReturn(mockData.getAuthorId());
         when(this.articleRepository.findByIdAndDeletedAtIsNull(mockData.getId()))
             .thenReturn(Optional.of(mockData));
 
@@ -62,9 +91,10 @@ class ArticleDaoTest extends BaseTest {
 
     @Test
     void testGetByIdWithReadDeletedRole() {
-        ArticleEntity mockData = new ArticleEntity().setId(1L);
+        ArticleEntity mockData = new ArticleEntity().setId(1L).setAuthorId("root");
 
         when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(true);
+        when(this.userService.getUserId()).thenReturn(mockData.getAuthorId());
         when(this.articleRepository.findById(mockData.getId())).thenReturn(Optional.of(mockData));
 
         assertThat(this.articleDao.getById(mockData.getId())).isNotNull();
@@ -81,8 +111,37 @@ class ArticleDaoTest extends BaseTest {
 
     @Test
     void testUpdateNotDeletedWithoutRole() {
-        assertThatThrownBy(() -> this.articleDao.save(new ArticleEntity().setId(1L)))
-            .isOfAnyClassIn(NotFoundResourceException.class);
+        ArticleEntity entity = new ArticleEntity().setId(1L).setAuthorId("root");
+
+        assertThatThrownBy(() -> this.articleDao.save(entity))
+            .isOfAnyClassIn(NotFoundArticleException.class);
+    }
+
+    @Test
+    void testUpdateOtherArchivedWithoutRole() {
+        ArticleEntity entity = new ArticleEntity().setId(1L).setAuthorId("root").setIsArchived(true);
+
+        when(this.userService.hasRole(Roles.Article.UPDATE)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.UPDATE_OTHER_ARCHIVED)).thenReturn(false);
+        when(this.userService.getUserId()).thenReturn("user");
+
+        assertThatThrownBy(() -> this.articleDao.save(entity))
+            .isOfAnyClassIn(NotFoundArticleException.class);
+    }
+
+    @Test
+    void testUpdateOtherDeletedWithoutRole() {
+        ArticleEntity entity = new ArticleEntity().setId(1L)
+            .setAuthorId("root")
+            .setIsArchived(false)
+            .setDeletedAt(this.getNowZonedDateTime());
+
+        when(this.userService.hasRole(Roles.Article.UPDATE_DELETED)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.UPDATE_OTHER_DELETED)).thenReturn(false);
+        when(this.userService.getUserId()).thenReturn("user");
+
+        assertThatThrownBy(() -> this.articleDao.save(entity))
+            .isOfAnyClassIn(NotFoundArticleException.class);
     }
 
     @Test
@@ -90,16 +149,17 @@ class ArticleDaoTest extends BaseTest {
         assertThatThrownBy(() -> this.articleDao.save(new ArticleEntity()
             .setId(1L)
             .setDeletedAt(this.getNowZonedDateTime())
-        )).isOfAnyClassIn(NotFoundResourceException.class);
+        )).isOfAnyClassIn(NotFoundArticleException.class);
     }
 
     @Test
     void testDeleteWithRole() {
-        ArticleEntity mockData = new ArticleEntity().setId(1L);
+        ArticleEntity mockData = new ArticleEntity().setId(1L).setAuthorId("root");
 
         when(this.userService.hasRole(Roles.Article.READ)).thenReturn(true);
         when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(false);
         when(this.userService.hasRole(Roles.Article.DELETE)).thenReturn(true);
+        when(this.userService.getUserId()).thenReturn(mockData.getAuthorId());
         when(this.articleRepository.findByIdAndDeletedAtIsNull(mockData.getId()))
             .thenReturn(Optional.of(mockData));
 
@@ -112,10 +172,13 @@ class ArticleDaoTest extends BaseTest {
 
     @Test
     void testDeleteDeletedWithRole() {
-        ArticleEntity mockData = new ArticleEntity().setId(1L).setDeletedAt(this.getNowZonedDateTime());
+        ArticleEntity mockData = new ArticleEntity().setId(1L)
+            .setDeletedAt(this.getNowZonedDateTime())
+            .setAuthorId("root");
 
         when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(true);
         when(this.userService.hasRole(Roles.Article.DELETE_DELETED)).thenReturn(true);
+        when(this.userService.getUserId()).thenReturn(mockData.getAuthorId());
         when(this.articleRepository.findById(mockData.getId())).thenReturn(Optional.of(mockData));
 
         this.articleDao.delete(mockData.getId());
@@ -125,11 +188,12 @@ class ArticleDaoTest extends BaseTest {
 
     @Test
     void testDeleteWithoutRole() {
-        ArticleEntity mockData = new ArticleEntity().setId(1L);
+        ArticleEntity mockData = new ArticleEntity().setId(1L).setAuthorId("root");
 
         when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(false);
         when(this.userService.hasRole(Roles.Article.READ)).thenReturn(true);
         when(this.userService.hasRole(Roles.Article.DELETE)).thenReturn(false);
+        when(this.userService.getUserId()).thenReturn(mockData.getAuthorId());
         when(this.articleRepository.findByIdAndDeletedAtIsNull(mockData.getId()))
             .thenReturn(Optional.of(mockData));
 
@@ -139,10 +203,46 @@ class ArticleDaoTest extends BaseTest {
 
     @Test
     void testDeleteDeletedWithoutRole() {
-        ArticleEntity mockData = new ArticleEntity().setId(1L).setDeletedAt(this.getNowZonedDateTime());
+        ArticleEntity mockData = new ArticleEntity().setId(1L)
+            .setDeletedAt(this.getNowZonedDateTime())
+            .setAuthorId("root");
 
         when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(true);
         when(this.userService.hasRole(Roles.Article.DELETE_DELETED)).thenReturn(false);
+        when(this.userService.getUserId()).thenReturn(mockData.getAuthorId());
+        when(this.articleRepository.findById(mockData.getId())).thenReturn(Optional.of(mockData));
+
+        assertThatThrownBy(() -> this.articleDao.delete(mockData.getId()))
+            .isOfAnyClassIn(NotFoundArticleException.class);
+    }
+
+    @Test
+    void testDeleteOtherWithoutRole() {
+        ArticleEntity mockData = new ArticleEntity().setId(1L).setAuthorId("root");
+
+        when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(false);
+        when(this.userService.hasRole(Roles.Article.READ)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.DELETE)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.DELETE_OTHER)).thenReturn(false);
+        when(this.userService.getUserId()).thenReturn("user");
+        when(this.articleRepository.findByIdAndDeletedAtIsNull(mockData.getId()))
+            .thenReturn(Optional.of(mockData));
+
+        assertThatThrownBy(() -> this.articleDao.delete(mockData.getId()))
+            .isOfAnyClassIn(NotFoundArticleException.class);
+    }
+
+    @Test
+    void testDeleteOtherDeletedWithoutRole() {
+        ArticleEntity mockData = new ArticleEntity().setId(1L)
+            .setDeletedAt(this.getNowZonedDateTime())
+            .setAuthorId("root");
+
+        when(this.userService.hasRole(Roles.Article.READ_DELETED)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.READ_OTHER_DELETED)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.DELETE_DELETED)).thenReturn(true);
+        when(this.userService.hasRole(Roles.Article.DELETE_OTHER_DELETED)).thenReturn(false);
+        when(this.userService.getUserId()).thenReturn("user");
         when(this.articleRepository.findById(mockData.getId())).thenReturn(Optional.of(mockData));
 
         assertThatThrownBy(() -> this.articleDao.delete(mockData.getId()))

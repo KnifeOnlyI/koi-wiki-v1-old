@@ -71,6 +71,7 @@ class ArticleControllerTest extends BaseControllerTest {
         assertThat(responseBody.getTitle()).isEqualTo("Java 17");
         assertThat(responseBody.getDescription()).isEqualTo("All news in Java 17");
         assertThat(responseBody.getContent()).isEqualTo("Java 17 improve performance ?");
+        assertThat(responseBody.getAuthorId()).isNotNull();
         assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getLastUpdateAt()).isNull();
         assertThat(responseBody.getDeletedAt()).isNull();
@@ -83,7 +84,8 @@ class ArticleControllerTest extends BaseControllerTest {
         CreateOrUpdateArticleModel body = new CreateOrUpdateArticleModel()
             .setTitle("C++")
             .setDescription("C++ news")
-            .setContent("C++ improve performance ?");
+            .setContent("C++ improve performance ?")
+            .setIsArchived(false);
 
         ResponseEntity<ArticleModel> response = this.restTemplate.exchange(
             Urls.Article.BASE,
@@ -103,6 +105,8 @@ class ArticleControllerTest extends BaseControllerTest {
         assertThat(responseBody.getTitle()).isEqualTo(body.getTitle());
         assertThat(responseBody.getDescription()).isEqualTo(body.getDescription());
         assertThat(responseBody.getContent()).isEqualTo(body.getContent());
+        assertThat(responseBody.getIsArchived()).isEqualTo(body.getIsArchived());
+        assertThat(responseBody.getAuthorId()).isNotNull();
         assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getLastUpdateAt()).isNull();
         assertThat(responseBody.getDeletedAt()).isNull();
@@ -115,7 +119,8 @@ class ArticleControllerTest extends BaseControllerTest {
         CreateOrUpdateArticleModel body = new CreateOrUpdateArticleModel()
             .setTitle("C++")
             .setDescription("C++ news")
-            .setContent("C++ improve performance ?");
+            .setContent("C++ improve performance ?")
+            .setIsArchived(true);
 
         ResponseEntity<ArticleModel> response = this.restTemplate.exchange(
             Urls.Article.UNIQUE,
@@ -136,6 +141,8 @@ class ArticleControllerTest extends BaseControllerTest {
         assertThat(responseBody.getTitle()).isEqualTo(body.getTitle());
         assertThat(responseBody.getContent()).isEqualTo(body.getContent());
         assertThat(responseBody.getDescription()).isEqualTo(body.getDescription());
+        assertThat(responseBody.getIsArchived()).isEqualTo(body.getIsArchived());
+        assertThat(responseBody.getAuthorId()).isNotNull();
         assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getLastUpdateAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getDeletedAt()).isNull();

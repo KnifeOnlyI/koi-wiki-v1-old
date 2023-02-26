@@ -36,6 +36,16 @@ public class ArticleModel {
     private String content;
 
     /**
+     * The flag to indicates if the article is archived.
+     */
+    private Boolean isArchived;
+
+    /**
+     * The author ID.
+     */
+    private String authorId;
+
+    /**
      * The associated categories.
      */
     private List<Long> categories;

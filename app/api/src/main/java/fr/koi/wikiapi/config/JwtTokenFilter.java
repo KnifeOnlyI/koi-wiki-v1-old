@@ -42,7 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         DecodedJWT jwt = jwtUtils.validate(token);
 
-        String username = jwt.getClaim("preferred_username").asString();
+        String userId = jwt.getSubject();
         List<String> realmAccess = (List<String>) jwt.getClaim("realm_access").asMap().get("roles");
         List<String> resourceAccess = (List<String>) ((Map<String, Object>) jwt.getClaim("resource_access").asMap().get("account")).get("roles");
         List<String> permissions = new ArrayList<>();
@@ -50,7 +50,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         permissions.addAll(realmAccess);
         permissions.addAll(resourceAccess);
 
-        KoiWikiUserDetails userDetails = new KoiWikiUserDetails(username, permissions);
+        KoiWikiUserDetails userDetails = new KoiWikiUserDetails(userId, permissions);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(
             userDetails,

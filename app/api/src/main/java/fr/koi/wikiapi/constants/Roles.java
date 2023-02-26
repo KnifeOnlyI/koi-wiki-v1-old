@@ -55,6 +55,11 @@ public final class Roles {
          * To search a deleted entities.
          */
         public static final String SEARCH_DELETED = "search-deleted";
+
+        /**
+         * To seearch an archived entities.
+         */
+        public static final String SEARCH_ARCHIVED = "search-archived";
     }
 
     /**
@@ -94,16 +99,34 @@ public final class Roles {
 
         public static final String READ_DELETED = Base.READ_DELETED + "-" + BASE;
 
+        public static final String READ_OTHER_ARCHIVED = Base.READ + "-other-archived-" + BASE;
+
+        public static final String READ_OTHER_DELETED = Base.READ + "-other-deleted-" + BASE;
+
         public static final String UPDATE = Base.UPDATE + "-" + BASE;
 
         public static final String UPDATE_DELETED = Base.UPDATE_DELETED + "-" + BASE;
 
+        public static final String UPDATE_OTHER_ARCHIVED = Base.UPDATE + "-other-archived-" + BASE;
+
+        public static final String UPDATE_OTHER_DELETED = Base.UPDATE + "-other-deleted-" + BASE;
+
         public static final String DELETE = Base.DELETE + "-" + BASE;
+
+        public static final String DELETE_OTHER = Base.DELETE + "-other-" + BASE;
 
         public static final String DELETE_DELETED = Base.DELETE_DELETED + "-" + BASE;
 
+        public static final String DELETE_OTHER_DELETED = Base.DELETE + "-other-deleted-" + BASE;
+
         public static final String SEARCH = Base.SEARCH + "-" + BASE;
 
+        public static final String SEARCH_ARCHIVED = Base.SEARCH_ARCHIVED + "-" + BASE;
+
         public static final String SEARCH_DELETED = Base.SEARCH_DELETED + "-" + BASE;
+
+        public static final String SEARCH_OTHER_ARCHIVED = Base.SEARCH + "-other-archived-" + BASE;
+
+        public static final String SEARCH_OTHER_DELETED = Base.SEARCH + "-other-deleted-" + BASE;
     }
 }

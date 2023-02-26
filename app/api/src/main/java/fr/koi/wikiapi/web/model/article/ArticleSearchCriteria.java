@@ -32,6 +32,16 @@ public class ArticleSearchCriteria {
     private String q;
 
     /**
+     * The author criteria.
+     */
+    private String author;
+
+    /**
+     * TRUE to include archived entities in the results, FALSE otherwise.
+     */
+    private Boolean archived;
+
+    /**
      * TRUE to include deleted entities in the results, FALSE otherwise.
      */
     private Boolean deleted;

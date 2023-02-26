@@ -34,38 +34,58 @@ public class ArticleDao {
      * @return The found entity
      */
     public ArticleEntity getById(final Long id) {
+        ArticleEntity entity;
+
         if (this.userService.hasRole(Roles.Article.READ_DELETED)) {
-            return this.articleRepository.findById(id)
+            entity = this.articleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundArticleException(id));
         } else if (this.userService.hasRole(Roles.Article.READ)) {
-            return this.articleRepository.findByIdAndDeletedAtIsNull(id)
+            entity = this.articleRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new NotFoundArticleException(id));
         } else {
             throw new NotFoundArticleException(id);
         }
+
+        if (!this.userService.getUserId().equals(entity.getAuthorId())) {
+            if (entity.getDeletedAt() != null && !this.userService.hasRole(Roles.Article.READ_OTHER_DELETED)) {
+                throw new NotFoundArticleException(id);
+            } else if (entity.getIsArchived() != null && !this.userService.hasRole(Roles.Article.READ_OTHER_ARCHIVED)) {
+                throw new NotFoundArticleException(id);
+            }
+        }
+
+        return entity;
     }
 
     /**
      * Save the specified entity.
      *
-     * @param data The entity to save
+     * @param entity The entity to save
      */
-    public void save(final ArticleEntity data) {
-        if (data.getId() == null) {
+    public void save(final ArticleEntity entity) {
+        if (entity.getId() == null) {
             if (!this.userService.hasRole(Roles.Article.CREATE)) {
                 throw new NotFoundResourceException();
             }
         } else {
-            if (data.getDeletedAt() == null) {
+            if (entity.getDeletedAt() == null) {
                 if (!this.userService.hasRole(Roles.Article.UPDATE)) {
-                    throw new NotFoundResourceException();
+                    throw new NotFoundArticleException(entity.getId());
                 }
             } else if (!this.userService.hasRole(Roles.Article.UPDATE_DELETED)) {
-                throw new NotFoundResourceException();
+                throw new NotFoundArticleException(entity.getId());
+            }
+
+            if (!this.userService.getUserId().equals(entity.getAuthorId())) {
+                if (entity.getIsArchived() && !this.userService.hasRole(Roles.Article.UPDATE_OTHER_ARCHIVED)) {
+                    throw new NotFoundArticleException(entity.getId());
+                } else if (entity.getDeletedAt() != null && !this.userService.hasRole(Roles.Article.UPDATE_OTHER_DELETED)) {
+                    throw new NotFoundArticleException(entity.getId());
+                }
             }
         }
 
-        this.articleRepository.save(data);
+        this.articleRepository.save(entity);
     }
 
     /**
@@ -81,10 +101,22 @@ public class ArticleDao {
                 throw new NotFoundArticleException(id);
             }
 
+            if (!this.userService.getUserId().equals(entity.getAuthorId())) {
+                if (!this.userService.hasRole(Roles.Article.DELETE_OTHER)) {
+                    throw new NotFoundArticleException(id);
+                }
+            }
+
             entity.setDeletedAt(TimeProvider.getInstance().nowZonedDateTime());
         } else {
             if (!this.userService.hasRole(Roles.Article.DELETE_DELETED)) {
                 throw new NotFoundArticleException(id);
+            }
+
+            if (!this.userService.getUserId().equals(entity.getAuthorId())) {
+                if (!this.userService.hasRole(Roles.Article.DELETE_OTHER_DELETED)) {
+                    throw new NotFoundArticleException(id);
+                }
             }
 
             this.articleRepository.deleteById(id);
