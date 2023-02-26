@@ -1,12 +1,15 @@
-<div *ngIf="showActionsBar" class="actions-bar">
+<div *ngIf="showActionsBar" [formGroup]="searchForm" class="actions-bar">
   <a [routerLink]="['/articles', 'create']" color="primary"
      mat-flat-button>{{'articles.actions.create.button' | translate}}</a>
+
+  <mat-form-field appearance="outline" class="filter">
+    <input formControlName="q" matInput placeholder="{{'filter.placeholder.label' | translate}}">
+  </mat-form-field>
 </div>
 
 <table (matSortChange)="onSortChange($event)"
        *ngIf="data"
        [dataSource]="data.content"
-       [formGroup]="searchForm"
        mat-table
        matSort>
 
@@ -92,6 +95,12 @@
       </button>
 
       <mat-menu #menu="matMenu">
+        <a [routerLink]="['/articles', element.id]"
+           mat-menu-item>
+          <mat-icon>remove_red_eye</mat-icon>
+          <span>{{'articles.actions.view.label' | translate}}</span>
+        </a>
+
         <ng-container *ngIf="!element.deletedAt; else actionsOnDeletedArticle">
           <a *ngIf="showEditArticleButton" [routerLink]="['/articles', 'edit', element.id]"
              mat-menu-item>

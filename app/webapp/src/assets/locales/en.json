@@ -140,6 +140,9 @@
         "button": "Create new",
         "success": "Article created"
       },
+      "view": {
+        "label": "View"
+      },
       "edit": {
         "label": "Edit",
         "success": "Article updated"
