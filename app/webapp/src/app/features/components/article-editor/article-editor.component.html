@@ -29,6 +29,19 @@
       </mat-slide-toggle>
     </div>
 
+    <div class="form-row-content">
+      <div class="form-input">
+        <mat-form-field appearance="outline" class="form-input">
+          <mat-label>{{'articles.fields.content.label' | translate}}</mat-label>
+          <textarea formControlName="content" matInput
+                    placeholder="{{'filter.placeholder.label' | translate}}"></textarea>
+          <mat-error>
+            {{form.controls.content.errors|TranslateFirstError:'articles.fields.content.errors'}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
     <div class="form-actions">
       <button [disabled]="form.pristine"
               class="mat-primary form-actions-reset"

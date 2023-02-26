@@ -113,6 +113,12 @@
           "maxlength": "Maximum length is 1000"
         }
       },
+      "content": {
+        "label": "Content",
+        "errors": {
+          "maxlength": "Maximum length is 65000"
+        }
+      },
       "isArchived": {
         "label": "Archived"
       },
