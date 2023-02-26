@@ -115,7 +115,7 @@ export class ArticleListComponent {
 
     this.showEditArticleButton = this.userService.hasRole(Role.UPDATE_ARTICLE);
     this.showDeleteArticleButton = this.userService.hasRole(Role.DELETE_ARTICLE);
-    this.showEditDeletedArticleButton = canReadDeletedArticle && this.userService.hasRole(Role.UPDATED_DELETED_ARTICLE);
+    this.showEditDeletedArticleButton = canReadDeletedArticle && this.userService.hasRole(Role.UPDATE_DELETED_ARTICLE);
     this.showDeleteDeletedArticleButton = canReadDeletedArticle && this.userService.hasRole(Role.DELETE_DELETED_ARTICLE);
 
     this.showActionsBar = this.userService.hasRole(Role.CREATE_ARTICLE);

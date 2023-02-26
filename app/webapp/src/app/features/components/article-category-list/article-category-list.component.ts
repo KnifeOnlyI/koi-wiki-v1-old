@@ -128,7 +128,7 @@ export class ArticleCategoryListComponent {
 
     this.showEditArticleCategoryButton = this.userService.hasRole(Role.UPDATE_ARTICLE_CATEGORY);
     this.showDeleteArticleCategoryButton = this.userService.hasRole(Role.DELETE_ARTICLE_CATEGORY);
-    this.showEditDeletedArticleCategoryButton = canReadDeletedArticleCategory && this.userService.hasRole(Role.UPDATED_DELETED_ARTICLE_CATEGORY);
+    this.showEditDeletedArticleCategoryButton = canReadDeletedArticleCategory && this.userService.hasRole(Role.UPDATE_DELETED_ARTICLE_CATEGORY);
     this.showDeleteDeletedArticleCategoryButton = canReadDeletedArticleCategory && this.userService.hasRole(Role.DELETE_DELETED_ARTICLE_CATEGORY);
 
     this.showActionsBar = this.userService.hasRole(Role.CREATE_ARTICLE_CATEGORY);
