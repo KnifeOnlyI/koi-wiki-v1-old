@@ -10,7 +10,8 @@
       "cancel": "Cancel",
       "reset": "Reset",
       "close": "Close",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "search": "Search"
     },
     "confirmationDialog": {
       "defaultTitle": "Confirmation",
@@ -124,6 +125,9 @@
       },
       "authorId": {
         "label": "Author"
+      },
+      "categories": {
+        "label": "Categories"
       },
       "createdAt": {
         "label": "Creation date"

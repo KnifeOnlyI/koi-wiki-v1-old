@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * Represent criteria to search article categories.
  */
@@ -40,4 +42,9 @@ public class ArticleCategorySearchCriteria {
      * TRUE to include deleted entities in the results, FALSE otherwise.
      */
     private Boolean deleted;
+
+    /**
+     * The list of excluded ids.
+     */
+    private List<Long> excludedIds;
 }

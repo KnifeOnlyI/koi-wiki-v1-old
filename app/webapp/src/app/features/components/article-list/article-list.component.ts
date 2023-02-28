@@ -15,7 +15,7 @@ import {FormsConstants} from '../../../shared/constants/forms.constants';
 import {SnackbarService} from '../../../shared/services/snackbar/snackbar.service';
 
 @Component({
-  selector: 'app-article--list',
+  selector: 'app-article-list',
   templateUrl: './article-list.component.html',
   styleUrls: ['./article-list.component.scss'],
   providers: [

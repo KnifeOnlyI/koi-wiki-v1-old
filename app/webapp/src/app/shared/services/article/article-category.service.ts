@@ -33,6 +33,7 @@ export class ArticleCategoryService {
    * @param deleted The deleted criteria
    * @param name The name criteria
    * @param description The description criteria
+   * @param excludedIds The excluded ids
    */
   search(
     page?: number | null,
@@ -41,8 +42,11 @@ export class ArticleCategoryService {
     deleted?: boolean | null,
     name?: string | null,
     description?: string | null,
+    excludedIds = new Array<number>(),
   ): Observable<PageableModel<ArticleCategoryModel>> {
-    const params = {} as any;
+    const params = {
+      excludedIds,
+    } as any;
 
     if (!Objects.isNull(page)) {
       params.page = page;

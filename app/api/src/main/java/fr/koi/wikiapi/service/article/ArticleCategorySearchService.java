@@ -18,6 +18,7 @@ import fr.koi.wikiapi.web.model.article.ArticleCategorySearchCriteria;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -111,6 +112,10 @@ public class ArticleCategorySearchService {
 
         Optional.ofNullable(criteria.getDescription())
             .ifPresent(value -> whereFilters.add(qArticleCategory.description.containsIgnoreCase(value)));
+
+        if (!CollectionUtils.isEmpty(criteria.getExcludedIds())) {
+            whereFilters.add(qArticleCategory.id.notIn(criteria.getExcludedIds()));
+        }
 
         return query
             .distinct()

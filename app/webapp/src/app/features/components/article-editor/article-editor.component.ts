@@ -23,7 +23,10 @@ export class ArticleEditorComponent {
       nonNullable: true,
       validators: [Validators.maxLength(65000)],
     }),
-    isArchived: new FormControl(true),
+    categories: new FormControl([], {
+      nonNullable: true,
+    }),
+    isArchived: new FormControl<boolean>(true, {nonNullable: true}),
   });
 
   articleModel?: ArticleModel;
@@ -50,7 +53,7 @@ export class ArticleEditorComponent {
       this.articleService.getById(this.articleId).subscribe((article) => {
         this.articleModel = article;
 
-        this.form.reset(this.articleModel);
+        this.form.reset(this.articleModel as any);
       });
     }
   }
@@ -79,7 +82,7 @@ export class ArticleEditorComponent {
     if (!Objects.isNull(this.articleModel)) {
       $event.preventDefault();
 
-      this.form.reset(this.articleModel);
+      this.form.reset(this.articleModel as any);
     }
   }
 }

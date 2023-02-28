@@ -53,6 +53,9 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatSlideToggleModule,
   ],
   providers: [],
+  exports: [
+    ArticleListComponent,
+  ],
 })
 export class FeaturesModule {
 }

@@ -23,4 +23,20 @@ export class Objects {
   static isBlank(value: string | null | undefined): boolean {
     return Objects.isNull(value) || value?.trim().length === 0;
   }
+
+  /**
+   * Create a copy of the specified value (JSON stringify and parse method).
+   * Only properties are availables on the created copy, not methods.
+   *
+   * @param value The value to copy
+   *
+   * @return The copy
+   */
+  static cloneProperties<T>(value: T): T {
+    if (this.isNull(value)) {
+      return value;
+    }
+
+    return JSON.parse(JSON.stringify(value));
+  }
 }

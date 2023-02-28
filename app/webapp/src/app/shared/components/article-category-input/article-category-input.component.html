@@ -1,0 +1,25 @@
+<form>
+  <mat-form-field appearance="fill" class="example-chip-list">
+    <mat-label>{{'articles.fields.categories.label' | translate}}</mat-label>
+    <mat-chip-grid #chipGrid>
+      <mat-chip-row (removed)="remove(selectedValue)"
+                    *ngFor="let selectedValue of selectedValues"
+      >
+        {{selectedValue.name|json}}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+    </mat-chip-grid>
+    <input #searchInput
+           [formControl]="inputForm"
+           [matAutocomplete]="auto"
+           [matChipInputFor]="chipGrid"
+    />
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+      <mat-option *ngFor="let selectableValue of selectableValues | async" [value]="selectableValue">
+        {{selectableValue.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

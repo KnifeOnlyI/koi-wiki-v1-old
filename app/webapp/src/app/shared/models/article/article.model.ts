@@ -11,4 +11,5 @@ export interface ArticleModel {
   createdAt?: Date | null;
   lastUpdateAt?: Date | null;
   deletedAt?: Date | null;
+  categories?: Array<number> | null;
 }
