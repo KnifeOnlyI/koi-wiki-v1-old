@@ -3,6 +3,7 @@ import {Role} from '../core/auth/constants/role';
 import {Routes} from '@angular/router';
 import {ArticleListComponent} from '../features/components/article-list/article-list.component';
 import {ArticleEditorComponent} from '../features/components/article-editor/article-editor.component';
+import {ArticleDetailComponent} from '../features/components/article-detail/article-detail.component';
 
 export const ARTICLE_ROUTES: Routes = [
   {
@@ -26,6 +27,10 @@ export const ARTICLE_ROUTES: Routes = [
         Role.READ_ARTICLE,
       ],
     },
+  },
+  {
+    path: 'articles/:id',
+    component: ArticleDetailComponent,
   },
   {
     path: 'articles/edit/:id',

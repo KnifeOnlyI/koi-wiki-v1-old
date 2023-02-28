@@ -1,0 +1,24 @@
+<ng-container *ngIf="article">
+  <h1>{{article.title}}</h1>
+  <h3>{{article.description}}</h3>
+
+  <div class="dates">
+    <div class="creation-date">
+      {{'articles.fields.createdAt.label' | translate}}&nbsp;:&nbsp;
+      <app-date-viewer [date]="article.createdAt"></app-date-viewer>
+    </div>
+    <div class="last-update-date">
+      {{'articles.fields.lastUpdateAt.label' | translate}}&nbsp;:&nbsp;
+      <app-date-viewer [date]="article.lastUpdateAt"></app-date-viewer>
+    </div>
+  </div>
+
+  <div class="author">
+    {{'articles.fields.authorId.label' | translate}}&nbsp;:&nbsp;
+    <app-user-viewer [userId]="article.authorId"></app-user-viewer>
+  </div>
+
+  <div class="article-content">
+    {{article.content}}
+  </div>
+</ng-container>

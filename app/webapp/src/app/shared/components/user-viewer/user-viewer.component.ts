@@ -14,7 +14,7 @@ export class UserViewerComponent implements OnInit {
    * The ID of user to display.
    */
   @Input()
-  userId?: string;
+  userId?: string | null;
 
   /**
    * The flag to indicates if the user ID must be show in a tooltip on hover.

@@ -20,6 +20,7 @@ import {CoreModule} from '../core/core.module';
 import {ArticleListComponent} from './components/article-list/article-list.component';
 import {ArticleEditorComponent} from './components/article-editor/article-editor.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {ArticleDetailComponent} from './components/article-detail/article-detail.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     ArticleCategoryEditorComponent,
     ArticleListComponent,
     ArticleEditorComponent,
+    ArticleDetailComponent,
   ],
   imports: [
     SharedModule,

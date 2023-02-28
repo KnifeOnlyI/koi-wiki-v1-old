@@ -16,7 +16,8 @@
       <mat-form-field appearance="outline" class="form-input">
         <mat-label>{{'articles.fields.description.label' | translate}}</mat-label>
         <textarea formControlName="description" matInput
-                  placeholder="{{'filter.placeholder.label' | translate}}"></textarea>
+                  placeholder="{{'filter.placeholder.label' | translate}}"
+        ></textarea>
         <mat-error>
           {{form.controls.description.errors|TranslateFirstError:'articles.fields.description.errors'}}
         </mat-error>
@@ -51,7 +52,8 @@
       <button [disabled]="form.pristine"
               class="mat-primary form-actions-reset"
               mat-flat-button
-              type="reset">
+              type="reset"
+      >
         {{'general.actions.reset' | translate}}
       </button>
       <button [disabled]="form.pristine || !form.valid"
@@ -63,7 +65,5 @@
       </button>
     </div>
   </form>
-
-  <pre><code>{{form.getRawValue()|json}}</code></pre>
 </div>
 

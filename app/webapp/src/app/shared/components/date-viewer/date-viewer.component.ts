@@ -17,6 +17,18 @@ export class DateViewerComponent implements OnInit {
   date?: Date | null;
 
   /**
+   * The date format.
+   */
+  @Input()
+  format = 'YYYY/MM/dd';
+
+  /**
+   * The format of date in the tooltip.
+   */
+  @Input()
+  tooltipFormat = 'HH:mm:ss';
+
+  /**
    * The tooltip content (hours).
    */
   tooltipContent!: string;
@@ -35,7 +47,7 @@ export class DateViewerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tooltipContent = this.dateService.format(this.date, 'HH:mm:ss');
-    this.spanContent = this.dateService.format(this.date, 'YYYY/MM/dd');
+    this.tooltipContent = this.dateService.format(this.date, this.tooltipFormat);
+    this.spanContent = this.dateService.format(this.date, this.format);
   }
 }
