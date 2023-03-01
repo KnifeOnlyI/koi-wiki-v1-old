@@ -5,7 +5,7 @@ import fr.koi.wikiapi.mapper.ArticleMapper;
 import fr.koi.wikiapi.repository.dao.ArticleDao;
 import fr.koi.wikiapi.service.user.UserService;
 import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
-import fr.koi.wikiapi.web.model.graphql.article.CreateOrUpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.CreateArticleModel;
 import fr.koi.wikiapi.web.model.graphql.article.UpdateArticleModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class ArticleService {
      * @return The found model
      */
     public ArticleModel getById(final Long id) {
-        return this.articleMapper.toQModel(this.articleDao.getById(id));
+        return this.articleMapper.toModel(this.articleDao.getById(id));
     }
 
     /**
@@ -49,13 +49,13 @@ public class ArticleService {
      *
      * @return A model that represent the created entity
      */
-    public ArticleModel create(final CreateOrUpdateArticleModel data) {
+    public ArticleModel create(final CreateArticleModel data) {
         ArticleEntity entity = this.articleMapper.toEntity(data)
             .setAuthorId(this.userService.getUserId());
 
         this.articleDao.save(entity);
 
-        return this.articleMapper.toQModel(entity);
+        return this.articleMapper.toModel(entity);
     }
 
     /**
@@ -70,7 +70,7 @@ public class ArticleService {
 
         this.articleMapper.updateEntity(entity, data);
 
-        return this.articleMapper.toQModel(entity);
+        return this.articleMapper.toModel(entity);
     }
 
     /**

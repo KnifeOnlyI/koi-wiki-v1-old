@@ -8,10 +8,10 @@ type ArticleCategory {
 }
 
 type PageArticleCategory {
-    content: [ArticleCategory]      # Résultats
-    number: Int                     # Numéro de page
-    totalPages: Int                 # Nombre total de page
-    totalElements: Int              # Nombre total d'éléments
+    content: [ArticleCategory]
+    number: Int
+    totalPages: Int
+    totalElements: Int
 }
 
 input CreateArticleCategory {

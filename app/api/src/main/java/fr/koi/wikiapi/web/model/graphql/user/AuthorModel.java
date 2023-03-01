@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 @Setter
 @Accessors(chain = true)
 public class AuthorModel {
-    private Long id;
+    private String id;
 
-    private String name;
+    private String username;
 }

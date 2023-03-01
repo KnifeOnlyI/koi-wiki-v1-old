@@ -1,9 +1,7 @@
 package fr.koi.wikiapi.service.user;
 
-import fr.koi.wikiapi.dto.exception.user.NotFoundUserException;
 import fr.koi.wikiapi.dto.user.KeycloakToken;
 import fr.koi.wikiapi.web.model.user.KeycloakUserInfo;
-import fr.koi.wikiapi.web.model.user.UsernameModel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -91,16 +90,11 @@ public class UserService {
      *
      * @return The response that contains the corresponding username
      */
-    public UsernameModel getUsername(final String id) {
-        var token = this.getAdminTokenOfMasterRealm();
-        var userInfo = this.getKeycloakUserInfo(id, token.getAccessToken());
+    public String getUsername(final String id) {
+        KeycloakToken token = this.getAdminTokenOfMasterRealm();
+        KeycloakUserInfo userInfo = this.getKeycloakUserInfo(id, token.getAccessToken());
 
-        if (userInfo == null) {
-            throw new NotFoundUserException(id);
-        }
-
-        return new UsernameModel()
-            .setUsername(userInfo.getUsername());
+        return userInfo != null ? userInfo.getUsername() : null;
     }
 
     /**
@@ -175,18 +169,26 @@ public class UserService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(authorizationToken);
 
-        ResponseEntity<KeycloakUserInfo> response = this.restTemplate.exchange(
-            requestUrl,
-            HttpMethod.GET,
-            new HttpEntity<>(headers),
-            new ParameterizedTypeReference<>() {
+        try {
+            ResponseEntity<KeycloakUserInfo> response = this.restTemplate.exchange(
+                requestUrl,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                new ParameterizedTypeReference<>() {
+                }
+            );
+
+            if (response.getStatusCode().isError()) {
+                return null;
             }
-        );
 
-        if (response.getStatusCode().isError()) {
-            return null;
+            return response.getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().is4xxClientError()) {
+                return null;
+            }
+
+            throw e;
         }
-
-        return response.getBody();
     }
 }

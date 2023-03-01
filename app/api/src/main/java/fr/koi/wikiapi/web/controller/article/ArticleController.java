@@ -4,7 +4,7 @@ import fr.koi.wikiapi.service.article.ArticleSearchService;
 import fr.koi.wikiapi.service.article.ArticleService;
 import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
 import fr.koi.wikiapi.web.model.graphql.article.ArticleSearchCriteria;
-import fr.koi.wikiapi.web.model.graphql.article.CreateOrUpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.CreateArticleModel;
 import fr.koi.wikiapi.web.model.graphql.article.UpdateArticleModel;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +64,7 @@ public class ArticleController {
      * @return The created entity
      */
     @MutationMapping
-    public ArticleModel createArticle(@Argument final CreateOrUpdateArticleModel data) {
+    public ArticleModel createArticle(@Argument final CreateArticleModel data) {
         return this.articleService.create(data);
     }
 
@@ -84,9 +84,13 @@ public class ArticleController {
      * Delete the specified entity identified by his ID.
      *
      * @param id The ID of entity to delete
+     *
+     * @return The ID of deleted entity
      */
     @MutationMapping
-    public void deleteArticle(@Argument final Long id) {
+    public Long deleteArticle(@Argument final Long id) {
         this.articleService.delete(id);
+
+        return id;
     }
 }

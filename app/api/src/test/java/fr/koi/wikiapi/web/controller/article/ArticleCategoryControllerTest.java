@@ -1,12 +1,12 @@
 package fr.koi.wikiapi.web.controller.article;
 
-import fr.koi.wikiapi.constants.GraphQlConstants;
+import fr.koi.wikiapi.graphql.constants.GQLConstants;
+import fr.koi.wikiapi.graphql.response.GQLResponse;
+import fr.koi.wikiapi.graphql.response.article_category.GQLArticleCategory;
+import fr.koi.wikiapi.graphql.response.article_category.GQLPageArticleCategory;
 import fr.koi.wikiapi.web.BaseControllerTest;
 import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
-import fr.koi.wikiapi.web.utils.GraphQlResponse;
 import fr.koi.wikiapi.web.utils.HttpHeadersBuilder;
-import fr.koi.wikiapi.web.utils.QArticleCategory;
-import fr.koi.wikiapi.web.utils.QPageArticleCategory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +40,10 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
         body.put("query", """
             query {
                 searchArticleCategories(criteria: {}) {%s}
-            }""".formatted(GraphQlConstants.ArticleCategory.ALL_PAGE_FIELDS)
+            }""".formatted(GQLConstants.ArticleCategory.ALL_PAGE_FIELDS)
         );
 
-        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+        ResponseEntity<GQLResponse<GQLArticleCategory>> response = this.restTemplate.exchange(
             "/graphql",
             HttpMethod.POST,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
@@ -54,9 +54,9 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        GQLResponse<GQLArticleCategory> graphQlResponseBody = response.getBody();
         assertThat(graphQlResponseBody).isNotNull();
-        QPageArticleCategory responseBody = graphQlResponseBody.getData().getSearchArticleCategories();
+        GQLPageArticleCategory responseBody = graphQlResponseBody.getData().getSearchArticleCategories();
         assertThat(responseBody).isNotNull();
 
         assertThat(responseBody.getContent()).isNotEmpty();
@@ -70,10 +70,10 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
         body.put("query", """
             query {
                 getArticleCategoryById(id: 1) {%s}
-            }""".formatted(GraphQlConstants.ArticleCategory.ALL_FIELDS)
+            }""".formatted(GQLConstants.ArticleCategory.ALL_FIELDS)
         );
 
-        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+        ResponseEntity<GQLResponse<GQLArticleCategory>> response = this.restTemplate.exchange(
             "/graphql",
             HttpMethod.POST,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
@@ -84,7 +84,7 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        GQLResponse<GQLArticleCategory> graphQlResponseBody = response.getBody();
         assertThat(graphQlResponseBody).isNotNull();
         ArticleCategoryModel responseBody = graphQlResponseBody.getData().getGetArticleCategoryById();
         assertThat(responseBody).isNotNull();
@@ -108,10 +108,10 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
                     name: "C++"
                     description: "All C++ articles"
                 }) {%s}
-            }""".formatted(GraphQlConstants.ArticleCategory.ALL_FIELDS)
+            }""".formatted(GQLConstants.ArticleCategory.ALL_FIELDS)
         );
 
-        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+        ResponseEntity<GQLResponse<GQLArticleCategory>> response = this.restTemplate.exchange(
             "/graphql",
             HttpMethod.POST,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
@@ -122,7 +122,7 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        GQLResponse<GQLArticleCategory> graphQlResponseBody = response.getBody();
         assertThat(graphQlResponseBody).isNotNull();
         ArticleCategoryModel responseBody = graphQlResponseBody.getData().getCreateArticleCategory();
         assertThat(responseBody).isNotNull();
@@ -147,10 +147,10 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
                     name: "C++"
                     description: "All C++ articles"
                 }) {%s}
-            }""".formatted(GraphQlConstants.ArticleCategory.ALL_FIELDS)
+            }""".formatted(GQLConstants.ArticleCategory.ALL_FIELDS)
         );
 
-        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+        ResponseEntity<GQLResponse<GQLArticleCategory>> response = this.restTemplate.exchange(
             "/graphql",
             HttpMethod.POST,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
@@ -161,7 +161,7 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        GQLResponse<GQLArticleCategory> graphQlResponseBody = response.getBody();
         assertThat(graphQlResponseBody).isNotNull();
         ArticleCategoryModel responseBody = graphQlResponseBody.getData().getUpdateArticleCategory();
         assertThat(responseBody).isNotNull();
@@ -186,7 +186,7 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
             }"""
         );
 
-        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+        ResponseEntity<GQLResponse<GQLArticleCategory>> response = this.restTemplate.exchange(
             "/graphql",
             HttpMethod.POST,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
@@ -197,7 +197,7 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        GQLResponse<GQLArticleCategory> graphQlResponseBody = response.getBody();
         assertThat(graphQlResponseBody).isNotNull();
         Long responseBody = graphQlResponseBody.getData().getDeleteArticleCategory();
 

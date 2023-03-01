@@ -1,4 +1,4 @@
-package fr.koi.wikiapi.web.utils;
+package fr.koi.wikiapi.graphql.response.article_category;
 
 import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
 import lombok.Getter;
@@ -8,8 +8,8 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class QArticleCategory {
-    private QPageArticleCategory searchArticleCategories;
+public class GQLArticleCategory {
+    private GQLPageArticleCategory searchArticleCategories;
     private ArticleCategoryModel getArticleCategoryById;
     private ArticleCategoryModel createArticleCategory;
     private ArticleCategoryModel updateArticleCategory;

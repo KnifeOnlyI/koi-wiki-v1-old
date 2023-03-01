@@ -101,7 +101,7 @@ public class ArticleSearchService {
         QueryResults<ArticleEntity> results = queryDSL.applyPagination(pageable, query).fetchResults();
 
         return new PageImpl<>(
-            this.articleMapper.toQModels(results.getResults()),
+            this.articleMapper.toModels(results.getResults()),
             pageable,
             results.getTotal()
         );

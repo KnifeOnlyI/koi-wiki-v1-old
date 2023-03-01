@@ -5,12 +5,15 @@ import fr.koi.wikiapi.domain.ArticleCategoryEntity;
 import fr.koi.wikiapi.domain.ArticleEntity;
 import fr.koi.wikiapi.mapper.utils.StringMapper;
 import fr.koi.wikiapi.repository.dao.ArticleCategoryDao;
+import fr.koi.wikiapi.service.user.UserService;
 import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
-import fr.koi.wikiapi.web.model.graphql.article.CreateOrUpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.CreateArticleModel;
 import fr.koi.wikiapi.web.model.graphql.article.UpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.user.AuthorModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -32,28 +35,28 @@ public abstract class ArticleMapper {
     private ArticleCategoryDao articleCategoryDao;
 
     /**
-     * Map the specified entity to ID.
-     *
-     * @param entity The entity to map
-     *
-     * @return The corresponding ID
+     * The service to manage users.
      */
-    public Long toId(ArticleCategoryEntity entity) {
-        if (entity == null) {
+    @Autowired
+    private UserService userService;
+
+    /**
+     * Get the corresponding user to the specified ID.
+     *
+     * @param userId The ID of user to get
+     *
+     * @return The corresponding author
+     */
+    @Named("getAuthor")
+    public AuthorModel toAuthor(String userId) {
+        if (userId == null) {
             return null;
         }
 
-        return entity.getId();
+        return new AuthorModel()
+            .setId(userId)
+            .setUsername(this.userService.getUsername(userId));
     }
-
-    /**
-     * Map the specified entities to ID list.
-     *
-     * @param entities The entities to map
-     *
-     * @return The correspondin ID list
-     */
-    public abstract List<Long> toIds(List<ArticleCategoryEntity> entities);
 
     /**
      * Map the specified ID list to entities.
@@ -80,9 +83,8 @@ public abstract class ArticleMapper {
      *
      * @return The corresponding model
      */
-    public abstract fr.koi.wikiapi.web.model.article.ArticleModel toModel(ArticleEntity entity);
-
-    public abstract ArticleModel toQModel(ArticleEntity entity);
+    @Mapping(target = "author", source = "authorId", qualifiedByName = "getAuthor")
+    public abstract ArticleModel toModel(ArticleEntity entity);
 
     /**
      * Map the specified model to entity.
@@ -94,7 +96,7 @@ public abstract class ArticleMapper {
     @Mapping(target = "createdAt", expression = MapStructs.Expressions.ZONED_DATE_TIME_NOW)
     @Mapping(target = "description", source = "description", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
     @Mapping(target = "content", source = "content", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
-    public abstract ArticleEntity toEntity(CreateOrUpdateArticleModel model);
+    public abstract ArticleEntity toEntity(CreateArticleModel model);
 
     /**
      * Map the specified entities to models.
@@ -103,9 +105,7 @@ public abstract class ArticleMapper {
      *
      * @return The corresponding models
      */
-    public abstract List<fr.koi.wikiapi.web.model.article.ArticleModel> toModels(List<ArticleEntity> entities);
-
-    public abstract List<ArticleModel> toQModels(List<ArticleEntity> entities);
+    public abstract List<ArticleModel> toModels(List<ArticleEntity> entities);
 
     /**
      * Update the specified entity with the value of the specified model.
@@ -113,11 +113,6 @@ public abstract class ArticleMapper {
      * @param entity The entity to udpate
      * @param model  The model which contains the data
      */
-    @Mapping(target = "lastUpdateAt", expression = MapStructs.Expressions.ZONED_DATE_TIME_NOW)
-    @Mapping(target = "description", source = "description", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
-    @Mapping(target = "content", source = "content", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
-    public abstract void updateEntity(@MappingTarget ArticleEntity entity, CreateOrUpdateArticleModel model);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "lastUpdateAt", expression = MapStructs.Expressions.ZONED_DATE_TIME_NOW)
     @Mapping(target = "description", source = "description", qualifiedBy = StringMapper.NullableStringToNotNullString.class)

@@ -1,11 +1,11 @@
 package fr.koi.wikiapi.web.controller.article;
 
-import fr.koi.wikiapi.constants.Urls;
-import fr.koi.wikiapi.dto.RestPageTestImpl;
+import fr.koi.wikiapi.graphql.constants.GQLConstants;
+import fr.koi.wikiapi.graphql.response.GQLResponse;
+import fr.koi.wikiapi.graphql.response.article.GQLArticleModel;
+import fr.koi.wikiapi.graphql.response.article.GQLPageArticle;
 import fr.koi.wikiapi.web.BaseControllerTest;
-import fr.koi.wikiapi.web.model.article.ArticleModel;
-import fr.koi.wikiapi.web.model.graphql.article.ArticleSearchCriteria;
-import fr.koi.wikiapi.web.model.graphql.article.CreateOrUpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
 import fr.koi.wikiapi.web.utils.HttpHeadersBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
@@ -33,62 +36,15 @@ class ArticleControllerTest extends BaseControllerTest {
     void testSearch() {
         HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
 
-        ArticleSearchCriteria body = new ArticleSearchCriteria();
-
-        ResponseEntity<RestPageTestImpl<ArticleModel>> response = this.restTemplate.exchange(
-            Urls.Article.BASE,
-            HttpMethod.GET,
-            new HttpEntity<>(body, httpHeadersBuilder.build()),
-            new ParameterizedTypeReference<>() {
-            }
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            query {
+                searchArticles(criteria: {}) {%s}
+            }""".formatted(GQLConstants.Article.ALL_PAGE_FIELDS)
         );
 
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-    }
-
-    @Test
-    void testGetById() {
-        HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
-
-        ResponseEntity<ArticleModel> response = this.restTemplate.exchange(
-            Urls.Article.UNIQUE,
-            HttpMethod.GET,
-            new HttpEntity<>(httpHeadersBuilder.build()),
-            new ParameterizedTypeReference<>() {
-            },
-            1L
-        );
-
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        ArticleModel responseBody = response.getBody();
-
-        assertThat(responseBody).isNotNull();
-        assertThat(responseBody.getId()).isNotNull();
-        assertThat(responseBody.getTitle()).isEqualTo("Java 17");
-        assertThat(responseBody.getDescription()).isEqualTo("All news in Java 17");
-        assertThat(responseBody.getContent()).isEqualTo("Java 17 improve performance ?");
-        assertThat(responseBody.getAuthorId()).isNotNull();
-        assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
-        assertThat(responseBody.getLastUpdateAt()).isNull();
-        assertThat(responseBody.getDeletedAt()).isNull();
-    }
-
-    @Test
-    void testCreate() {
-        HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
-
-        CreateOrUpdateArticleModel body = new CreateOrUpdateArticleModel()
-            .setTitle("C++")
-            .setDescription("C++ news")
-            .setContent("C++ improve performance ?")
-            .setIsArchived(false);
-
-        ResponseEntity<ArticleModel> response = this.restTemplate.exchange(
-            Urls.Article.BASE,
+        ResponseEntity<GQLResponse<GQLArticleModel>> response = this.restTemplate.exchange(
+            "/graphql",
             HttpMethod.POST,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
             new ParameterizedTypeReference<>() {
@@ -98,15 +54,89 @@ class ArticleControllerTest extends BaseControllerTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        ArticleModel responseBody = response.getBody();
+        GQLResponse<GQLArticleModel> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        GQLPageArticle responseBody = graphQlResponseBody.getData().getSearchArticles();
+        assertThat(responseBody).isNotNull();
+
+        assertThat(responseBody.getContent()).isNotEmpty();
+    }
+
+    @Test
+    void testGetById() {
+        HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
+
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            query {
+                getArticleById(id: 1) {%s}
+            }""".formatted(GQLConstants.Article.ALL_FIELDS)
+        );
+
+        ResponseEntity<GQLResponse<GQLArticleModel>> response = this.restTemplate.exchange(
+            "/graphql",
+            HttpMethod.POST,
+            new HttpEntity<>(body, httpHeadersBuilder.build()),
+            new ParameterizedTypeReference<>() {
+            }
+        );
+
+        GQLResponse<GQLArticleModel> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        ArticleModel responseBody = graphQlResponseBody.getData().getGetArticleById();
+        assertThat(responseBody).isNotNull();
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody.getId()).isNotNull();
-        assertThat(responseBody.getTitle()).isEqualTo(body.getTitle());
-        assertThat(responseBody.getDescription()).isEqualTo(body.getDescription());
-        assertThat(responseBody.getContent()).isEqualTo(body.getContent());
-        assertThat(responseBody.getIsArchived()).isEqualTo(body.getIsArchived());
-        assertThat(responseBody.getAuthorId()).isNotNull();
+        assertThat(responseBody.getTitle()).isEqualTo("Java 17");
+        assertThat(responseBody.getDescription()).isEqualTo("All news in Java 17");
+        assertThat(responseBody.getContent()).isEqualTo("Java 17 improve performance ?");
+        assertThat(responseBody.getAuthor()).isNotNull();
+        assertThat(responseBody.getAuthor().getId()).isEqualTo("author_keycloak_id");
+        assertThat(responseBody.getAuthor().getUsername()).isNull();
+        assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
+        assertThat(responseBody.getLastUpdateAt()).isNull();
+        assertThat(responseBody.getDeletedAt()).isNull();
+    }
+
+    @Test
+    void testCreate() {
+        HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
+
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            mutation {
+                createArticle(data: {
+                    title: "C++"
+                    description: "C++ news"
+                    content: "C++ improve performance ?"
+                    isArchived: true
+                }) {%s}
+            }""".formatted(GQLConstants.Article.ALL_FIELDS)
+        );
+
+        ResponseEntity<GQLResponse<GQLArticleModel>> response = this.restTemplate.exchange(
+            "/graphql",
+            HttpMethod.POST,
+            new HttpEntity<>(body, httpHeadersBuilder.build()),
+            new ParameterizedTypeReference<>() {
+            }
+        );
+
+        GQLResponse<GQLArticleModel> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        ArticleModel responseBody = graphQlResponseBody.getData().getCreateArticle();
+        assertThat(responseBody).isNotNull();
+
+        assertThat(responseBody).isNotNull();
+        assertThat(responseBody.getId()).isNotNull();
+        assertThat(responseBody.getTitle()).isEqualTo("C++");
+        assertThat(responseBody.getDescription()).isEqualTo("C++ news");
+        assertThat(responseBody.getContent()).isEqualTo("C++ improve performance ?");
+        assertThat(responseBody.getIsArchived()).isTrue();
+        assertThat(responseBody.getAuthor()).isNotNull();
+        assertThat(responseBody.getAuthor().getId()).isNotNull();
+        assertThat(responseBody.getAuthor().getUsername()).isNotNull();
         assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getLastUpdateAt()).isNull();
         assertThat(responseBody.getDeletedAt()).isNull();
@@ -116,33 +146,40 @@ class ArticleControllerTest extends BaseControllerTest {
     void testUpdate() {
         HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
 
-        CreateOrUpdateArticleModel body = new CreateOrUpdateArticleModel()
-            .setTitle("C++")
-            .setDescription("C++ news")
-            .setContent("C++ improve performance ?")
-            .setIsArchived(true);
-
-        ResponseEntity<ArticleModel> response = this.restTemplate.exchange(
-            Urls.Article.UNIQUE,
-            HttpMethod.PUT,
-            new HttpEntity<>(body, httpHeadersBuilder.build()),
-            new ParameterizedTypeReference<>() {
-            },
-            1L
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            mutation {
+                updateArticle(data: {
+                    id: 1
+                    title: "C++"
+                    description: "C++ news"
+                    content: "C++ improve performance ?"
+                    isArchived: true
+                }) {%s}
+            }""".formatted(GQLConstants.Article.ALL_FIELDS)
         );
 
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        ResponseEntity<GQLResponse<GQLArticleModel>> response = this.restTemplate.exchange(
+            "/graphql",
+            HttpMethod.POST,
+            new HttpEntity<>(body, httpHeadersBuilder.build()),
+            new ParameterizedTypeReference<>() {
+            }
+        );
 
-        ArticleModel responseBody = response.getBody();
+        GQLResponse<GQLArticleModel> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        ArticleModel responseBody = graphQlResponseBody.getData().getUpdateArticle();
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody.getId()).isNotNull();
-        assertThat(responseBody.getTitle()).isEqualTo(body.getTitle());
-        assertThat(responseBody.getContent()).isEqualTo(body.getContent());
-        assertThat(responseBody.getDescription()).isEqualTo(body.getDescription());
-        assertThat(responseBody.getIsArchived()).isEqualTo(body.getIsArchived());
-        assertThat(responseBody.getAuthorId()).isNotNull();
+        assertThat(responseBody.getTitle()).isEqualTo("C++");
+        assertThat(responseBody.getDescription()).isEqualTo("C++ news");
+        assertThat(responseBody.getContent()).isEqualTo("C++ improve performance ?");
+        assertThat(responseBody.getIsArchived()).isTrue();
+        assertThat(responseBody.getAuthor()).isNotNull();
+        assertThat(responseBody.getAuthor().getId()).isNotNull();
+        assertThat(responseBody.getAuthor().getUsername()).isNull();
         assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getLastUpdateAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getDeletedAt()).isNull();
@@ -152,17 +189,25 @@ class ArticleControllerTest extends BaseControllerTest {
     void testDelete() {
         HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
 
-        ResponseEntity<ArticleModel> deleteResponse = this.restTemplate.exchange(
-            Urls.Article.UNIQUE,
-            HttpMethod.DELETE,
-            new HttpEntity<>(httpHeadersBuilder.build()),
-            new ParameterizedTypeReference<>() {
-            },
-            1L
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            mutation {
+                deleteArticle(id: 1)
+            }"""
         );
 
-        assertThat(deleteResponse).isNotNull();
-        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(deleteResponse.getBody()).isNull();
+        ResponseEntity<GQLResponse<GQLArticleModel>> response = this.restTemplate.exchange(
+            "/graphql",
+            HttpMethod.POST,
+            new HttpEntity<>(body, httpHeadersBuilder.build()),
+            new ParameterizedTypeReference<>() {
+            }
+        );
+
+        GQLResponse<GQLArticleModel> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        Long responseBody = graphQlResponseBody.getData().getDeleteArticle();
+
+        assertThat(responseBody).isEqualTo(1L);
     }
 }

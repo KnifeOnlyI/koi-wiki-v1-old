@@ -32,26 +32,61 @@ public class ArticleCategoryController {
      */
     private final ArticleCategorySearchService articleCategorySearchService;
 
+    /**
+     * Search entities.
+     *
+     * @param criteria The criteria
+     *
+     * @return The results
+     */
     @QueryMapping
     public Page<ArticleCategoryModel> searchArticleCategories(@Argument final ArticleCategorySearchCriteria criteria) {
         return this.articleCategorySearchService.search(criteria);
     }
 
+    /**
+     * Get a model with the specified ID and throw an error if not exists.
+     *
+     * @param id The ID
+     *
+     * @return The found model
+     */
     @QueryMapping
     public ArticleCategoryModel getArticleCategoryById(@Argument final Long id) {
         return this.articleCategoryService.getById(id);
     }
 
+    /**
+     * Create a new entity.
+     *
+     * @param data The data of entity to create
+     *
+     * @return The created entity
+     */
     @MutationMapping
     public ArticleCategoryModel createArticleCategory(@Argument final CreateArticleCategoryModel data) {
         return this.articleCategoryService.create(data);
     }
 
+    /**
+     * Update an entity based on the specified data.
+     *
+     * @param data The data of entity to create
+     *
+     * @return A model that represent the updated entity
+     */
     @MutationMapping
     public ArticleCategoryModel updateArticleCategory(@Argument final UpdateArticleCategoryModel data) {
         return this.articleCategoryService.update(data);
     }
 
+    /**
+     * Delete the specified entity identified by his ID.
+     *
+     * @param id The ID of entity to delete
+     *
+     * @return The ID of deleted entity
+     */
     @MutationMapping
     public Long deleteArticleCategory(@Argument final Long id) {
         this.articleCategoryService.delete(id);

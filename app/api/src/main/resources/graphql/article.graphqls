@@ -1,21 +1,26 @@
 type Article {
-    id: ID
-    title: String
-    description: String
-    content: String
-    isArchived: Boolean
-    author: Author
+    id: ID!
+    title: String!
+    description: String!
+    content: String!
+    isArchived: Boolean!
+    author: Author!
     categories: [ArticleCategory]
-    createdAt: DateTime
+    createdAt: DateTime!
     lastUpdateAt: DateTime
     deletedAt: DateTime
 }
 
+type Author {
+    id: ID!
+    username: String
+}
+
 type PageArticle {
-    content: [Article]      # Résultats
-    number: Int             # Numéro de page
-    totalPages: Int         # Nombre total de page
-    totalElements: Int      # Nombre total d'éléments
+    content: [Article]
+    number: Int
+    totalPages: Int
+    totalElements: Int
 }
 
 input ArticleSearchCriteria {
@@ -33,7 +38,7 @@ input CreateArticle {
     description: String!
     content: String!
     isArchived: Boolean!
-    categories: [Int]!
+    categories: [Int]
 }
 
 input UpdateArticle {
@@ -42,5 +47,5 @@ input UpdateArticle {
     description: String!
     content: String!
     isArchived: Boolean!
-    categories: [Int]!
+    categories: [Int]
 }
