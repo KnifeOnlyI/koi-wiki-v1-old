@@ -1,27 +1,30 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../../environments/environment';
+import {map, Observable} from 'rxjs';
 import {PageableModel} from '../../models/pageable.model';
 import {Objects} from '../../utils/objects';
 import {ArticleModel} from '../../models/article/article.model';
+import {SearchArticlesQuery} from '../../graphql/article/search-articles-query.service';
+import {GetArticleByIdQuery} from '../../graphql/article/get-article-by-id.query';
+import {DeleteArticleQuery} from '../../graphql/article/delete-article.query';
+import {CreateArticleQuery} from '../../graphql/article/create-article.query';
+import {UpdateArticleQuery} from '../../graphql/article/update-article.query';
 
 /**
  * The service to manage article.
  */
 @Injectable()
 export class ArticleService {
-  /**
-   * The base URL of REST resource to manage articles.
-   */
-  private readonly baseResourceUrl = `${environment.baseApiUrl}/articles`;
 
   /**
    * Create a new instance.
-   *
-   * @param http The service to manage HTTP requests
    */
-  constructor(private readonly http: HttpClient) {
+  constructor(
+    private readonly searchArticlesQuery: SearchArticlesQuery,
+    private readonly getArticleByIdQuery: GetArticleByIdQuery,
+    private readonly deleteArticleQuery: DeleteArticleQuery,
+    private readonly createArticleQuery: CreateArticleQuery,
+    private readonly updateArticleQuery: UpdateArticleQuery,
+  ) {
   }
 
   /**
@@ -44,41 +47,17 @@ export class ArticleService {
     authorId?: string | null,
     q?: string | null,
   ): Observable<PageableModel<ArticleModel>> {
-    const params = {} as any;
-
-    if (!Objects.isNull(page)) {
-      params.page = page;
-    }
-
-    if (!Objects.isNull(pageSize)) {
-      params.pageSize = pageSize;
-    }
-
-    if (!Objects.isBlank(sort)) {
-      params.sort = sort;
-    }
-
-    if (!Objects.isNull(deleted)) {
-      params.deleted = deleted;
-    }
-
-    if (!Objects.isNull(archived)) {
-      params.archived = archived;
-    }
-
-    if (!Objects.isBlank(authorId)) {
-      params.authorId = authorId;
-    }
-
-    if (!Objects.isBlank(q)) {
-      params.q = q;
-    }
-
-    return this.http.get<PageableModel<ArticleModel>>(
-      this.baseResourceUrl,
-      {
-        params,
-      });
+    return this.searchArticlesQuery.fetch({
+      criteria: {
+        page,
+        pageSize,
+        sort,
+        deleted,
+        archived,
+        authorId,
+        q,
+      },
+    }).pipe(map(res => res.data.searchArticles));
   }
 
   /**
@@ -89,7 +68,9 @@ export class ArticleService {
    * @return An observable on the result
    */
   getById(id: number): Observable<ArticleModel> {
-    return this.http.get(`${this.baseResourceUrl}/${id}`);
+    return this.getArticleByIdQuery.fetch({
+      id,
+    }).pipe(map(res => res.data.getArticleById));
   }
 
   /**
@@ -101,8 +82,8 @@ export class ArticleService {
    */
   save(data: ArticleModel): Observable<ArticleModel> {
     return Objects.isNull(data.id)
-      ? this.http.post(this.baseResourceUrl, data)
-      : this.http.put(`${this.baseResourceUrl}/${data.id}`, data);
+      ? this.createArticleQuery.mutate({data}).pipe(map(res => res.data.createArticle))
+      : this.updateArticleQuery.mutate({data}).pipe(map(res => res.data.updateArticle));
   }
 
   /**
@@ -112,7 +93,7 @@ export class ArticleService {
    *
    * @return An empty observable
    */
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseResourceUrl}/${id}`);
+  delete(id: number): Observable<any> {
+    return this.deleteArticleQuery.mutate({id});
   }
 }

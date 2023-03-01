@@ -201,7 +201,9 @@ export class ArticleCategoryListComponent {
       deleted,
       this.searchForm.controls.name.value,
       this.searchForm.controls.description.value,
-    ).subscribe((results) => this.data = results);
+    ).subscribe((results) => {
+      this.data = results;
+    });
   }
 
   /**
@@ -211,6 +213,7 @@ export class ArticleCategoryListComponent {
    */
   private delete(id: number): void {
     this.articleCategoryService.delete(id).subscribe(() => {
+      console.debug('DELETED');
       this.refresh();
 
       this.snackbarService.open('articles-categories.actions.delete.success');

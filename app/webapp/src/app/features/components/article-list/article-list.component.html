@@ -54,7 +54,7 @@
       {{'articles.fields.authorId.label' | translate}}
     </th>
     <td *matCellDef="let element" mat-cell>
-      <app-user-viewer [userId]="element.authorId"></app-user-viewer>
+      {{element.author.username}}
     </td>
   </ng-container>
 

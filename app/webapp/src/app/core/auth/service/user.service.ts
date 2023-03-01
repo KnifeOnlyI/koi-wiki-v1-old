@@ -5,9 +5,6 @@ import {Objects} from '../../../shared/utils/objects';
 import {JwtService} from '../../service/jwt.service';
 import {JwtToken} from '../models/jwt-token';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../../environments/environment';
-import {Observable} from 'rxjs';
-import {UsernameModel} from '../models/username.model';
 
 /**
  * The service to manage users.
@@ -26,10 +23,7 @@ export class UserService {
    * The ID of currently logged user.
    */
   public readonly userId?: string;
-  /**
-   * The base URL of REST resource to manage users.
-   */
-  private readonly baseResourceUrl = `${environment.baseApiUrl}/users`;
+
   /**
    * The token of the currently logger user.
    */
@@ -109,16 +103,5 @@ export class UserService {
    */
   login(redirectUri?: string): void {
     this.keycloakService.login({redirectUri}).then();
-  }
-
-  /**
-   * Get a username from the specified ID.
-   *
-   * @param userId The user ID
-   *
-   * @return The corresponding username (NULL if not found corresponding username)
-   */
-  getUsernameFromId(userId: string): Observable<UsernameModel | null> {
-    return this.http.get(`${this.baseResourceUrl}/${userId}`);
   }
 }

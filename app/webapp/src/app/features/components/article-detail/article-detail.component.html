@@ -15,7 +15,7 @@
 
   <div class="author">
     {{'articles.fields.authorId.label' | translate}}&nbsp;:&nbsp;
-    <app-user-viewer [userId]="article.authorId"></app-user-viewer>
+    {{article.author?.username}}
   </div>
 
   <div class="article-content">

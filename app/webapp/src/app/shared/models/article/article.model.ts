@@ -1,3 +1,5 @@
+import {AuthorModel} from './author.model';
+
 /**
  * Represent an article.
  */
@@ -6,10 +8,11 @@ export interface ArticleModel {
   title?: string;
   description?: string;
   content?: string;
-  isArchived?: boolean | null;
-  authorId?: string | null;
-  createdAt?: Date | null;
-  lastUpdateAt?: Date | null;
-  deletedAt?: Date | null;
-  categories?: Array<number> | null;
+  isArchived?: boolean;
+  author?: AuthorModel;
+  authorId?: string;
+  createdAt?: Date;
+  lastUpdateAt?: Date;
+  deletedAt?: Date;
+  categories?: Array<number>;
 }

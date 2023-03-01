@@ -1,5 +1,0 @@
-<ng-container *ngIf="userId">
-  <span *ngIf="userIdTooltip" [matTooltip]="userId">{{(username | async)?.username}}</span>
-  <span *ngIf="!userIdTooltip">{{(username | async)?.username}}</span>
-</ng-container>
-

@@ -14,7 +14,6 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {SnackbarService} from './services/snackbar/snackbar.service';
 import {ArticleService} from './services/article/article.service';
-import {UserViewerComponent} from './components/user-viewer/user-viewer.component';
 import {AsyncPipe, JsonPipe, NgForOf, NgIf} from '@angular/common';
 import {BooleanViewerComponent} from './components/boolean-viewer/boolean-viewer.component';
 import {ArticleCategoryInputComponent} from './components/article-category-input/article-category-input.component';
@@ -26,6 +25,16 @@ import {MatIconModule} from '@angular/material/icon';
 import {ArticleCategoryChipComponent} from './components/article-category-chip/article-category-chip.component';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {SearchArticleCategoriesQuery} from './graphql/article-category/search-article-categories.query';
+import {GetArticleCategoryByIdQuery} from './graphql/article-category/get-article-category-by-id.query';
+import {DeleteArticleCategoryQuery} from './graphql/article-category/delete-article-category.query';
+import {CreateArticleCategoryQuery} from './graphql/article-category/create-article-category.query';
+import {UpdateArticleCategoryQuery} from './graphql/article-category/update-article-category.query';
+import {SearchArticlesQuery} from './graphql/article/search-articles-query.service';
+import {GetArticleByIdQuery} from './graphql/article/get-article-by-id.query';
+import {DeleteArticleQuery} from './graphql/article/delete-article.query';
+import {CreateArticleQuery} from './graphql/article/create-article.query';
+import {UpdateArticleQuery} from './graphql/article/update-article.query';
 
 @NgModule({
   declarations: [
@@ -34,7 +43,6 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     DateViewerComponent,
     TranslateFirstErrorPipe,
     ConfirmDialogComponent,
-    UserViewerComponent,
     BooleanViewerComponent,
     ArticleCategoryInputComponent,
     ArticleCategoryChipComponent,
@@ -62,7 +70,6 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     IsAnonymousDirective,
     DateViewerComponent,
     TranslateFirstErrorPipe,
-    UserViewerComponent,
     BooleanViewerComponent,
     ArticleCategoryInputComponent,
   ],
@@ -71,6 +78,16 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     ArticleService,
     DateService,
     SnackbarService,
+    SearchArticleCategoriesQuery,
+    GetArticleCategoryByIdQuery,
+    DeleteArticleCategoryQuery,
+    CreateArticleCategoryQuery,
+    UpdateArticleCategoryQuery,
+    SearchArticlesQuery,
+    GetArticleByIdQuery,
+    DeleteArticleQuery,
+    CreateArticleQuery,
+    UpdateArticleQuery,
     {
       provide: ErrorStateMatcher,
       useClass: ShowOnDirtyErrorStateMatcher,

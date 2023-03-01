@@ -4,7 +4,7 @@ type ArticleCategory {
     description: String!
     createdAt: DateTime
     lastUpdateAt: DateTime
-    deletedAt: String
+    deletedAt: DateTime
 }
 
 type PageArticleCategory {
@@ -29,8 +29,8 @@ input ArticleCategorySearchCriteria {
     page: Int
     pageSize: Int
     sort: String
-    q: String
-    authorId: String
-    archived: Boolean
+    name: String
+    description: String
     deleted: Boolean
+    excludedIds: [Int]
 }

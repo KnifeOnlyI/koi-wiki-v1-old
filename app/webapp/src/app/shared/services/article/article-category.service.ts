@@ -1,27 +1,36 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {ArticleCategoryModel} from '../../models/article/article-category.model';
-import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../../environments/environment';
 import {PageableModel} from '../../models/pageable.model';
 import {Objects} from '../../utils/objects';
+import {SearchArticleCategoriesQuery} from '../../graphql/article-category/search-article-categories.query';
+import {GetArticleCategoryByIdQuery} from '../../graphql/article-category/get-article-category-by-id.query';
+import {DeleteArticleCategoryQuery} from '../../graphql/article-category/delete-article-category.query';
+import {CreateArticleCategoryQuery} from '../../graphql/article-category/create-article-category.query';
+import {UpdateArticleCategoryQuery} from '../../graphql/article-category/update-article-category.query';
 
 /**
  * The service to manage article categories.
  */
 @Injectable()
 export class ArticleCategoryService {
-  /**
-   * The base URL of REST resource to manage articles categories.
-   */
-  private readonly baseResourceUrl = `${environment.baseApiUrl}/articles-categories`;
 
   /**
    * Create a new instance.
    *
-   * @param http The service to manage HTTP requests
+   * @param searchArticleCategoriesQuery The query to search article categories
+   * @param getArticleCategoryByIdQuery
+   * @param deleteArticleCategoryQuery
+   * @param createArticleCategoryQuery
+   * @param updateArticleCategoryQuery
    */
-  constructor(private readonly http: HttpClient) {
+  constructor(
+    private readonly searchArticleCategoriesQuery: SearchArticleCategoriesQuery,
+    private readonly getArticleCategoryByIdQuery: GetArticleCategoryByIdQuery,
+    private readonly deleteArticleCategoryQuery: DeleteArticleCategoryQuery,
+    private readonly createArticleCategoryQuery: CreateArticleCategoryQuery,
+    private readonly updateArticleCategoryQuery: UpdateArticleCategoryQuery,
+  ) {
   }
 
   /**
@@ -44,39 +53,16 @@ export class ArticleCategoryService {
     description?: string | null,
     excludedIds = new Array<number>(),
   ): Observable<PageableModel<ArticleCategoryModel>> {
-    const params = {
-      excludedIds,
-    } as any;
-
-    if (!Objects.isNull(page)) {
-      params.page = page;
-    }
-
-    if (!Objects.isNull(pageSize)) {
-      params.pageSize = pageSize;
-    }
-
-    if (!Objects.isBlank(sort)) {
-      params.sort = sort;
-    }
-
-    if (!Objects.isNull(deleted)) {
-      params.deleted = deleted;
-    }
-
-    if (!Objects.isBlank(name)) {
-      params.name = name;
-    }
-
-    if (!Objects.isBlank(description)) {
-      params.description = description;
-    }
-
-    return this.http.get<PageableModel<ArticleCategoryModel>>(
-      this.baseResourceUrl,
-      {
-        params,
-      });
+    return this.searchArticleCategoriesQuery.fetch({
+      criteria: {
+        page,
+        pageSize,
+        sort,
+        deleted,
+        name,
+        description,
+      },
+    }).pipe(map(res => res.data.searchArticleCategories));
   }
 
   /**
@@ -87,7 +73,9 @@ export class ArticleCategoryService {
    * @return An observable on the result
    */
   getById(id: number): Observable<ArticleCategoryModel> {
-    return this.http.get(`${this.baseResourceUrl}/${id}`);
+    return this.getArticleCategoryByIdQuery.fetch({
+      id,
+    }).pipe(map(res => res.data.getArticleCategoryById));
   }
 
   /**
@@ -99,8 +87,8 @@ export class ArticleCategoryService {
    */
   save(data: ArticleCategoryModel): Observable<ArticleCategoryModel> {
     return Objects.isNull(data.id)
-      ? this.http.post(this.baseResourceUrl, data)
-      : this.http.put(`${this.baseResourceUrl}/${data.id}`, data);
+      ? this.createArticleCategoryQuery.mutate({data}).pipe(map(res => res.data.createArticleCategory))
+      : this.updateArticleCategoryQuery.mutate({data}).pipe(map(res => res.data.updateArticleCategory));
   }
 
   /**
@@ -110,7 +98,7 @@ export class ArticleCategoryService {
    *
    * @return An empty observable
    */
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseResourceUrl}/${id}`);
+  delete(id: number): Observable<any> {
+    return this.deleteArticleCategoryQuery.mutate({id});
   }
 }

@@ -11,7 +11,8 @@
                              nullable="true"
                              foreignKeyName="fk_article_article_id_article_id"
                              referencedTableName="article"
-                             referencedColumnNames="id"/>
+                             referencedColumnNames="id"
+                             deleteCascade="true"/>
             </column>
             <column name="article_category_id" type="bigint">
                 <constraints primaryKey="true"
@@ -19,7 +20,8 @@
                              nullable="true"
                              foreignKeyName="fk_article_article_category_id_article_category_id"
                              referencedTableName="article_category"
-                             referencedColumnNames="id"/>
+                             referencedColumnNames="id"
+                             deleteCascade="true"/>
             </column>
         </createTable>
 

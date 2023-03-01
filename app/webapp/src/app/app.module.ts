@@ -10,6 +10,7 @@ import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core/core.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import ROUTES from './app.routes';
+import {GraphQLModule} from './graphql.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import ROUTES from './app.routes';
     SharedModule,
     FeaturesModule,
     BrowserAnimationsModule,
+    GraphQLModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
