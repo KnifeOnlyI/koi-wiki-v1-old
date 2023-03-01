@@ -1,16 +1,18 @@
 package fr.koi.wikiapi.web.controller.article;
 
-import fr.koi.wikiapi.constants.Urls;
 import fr.koi.wikiapi.service.article.ArticleCategorySearchService;
 import fr.koi.wikiapi.service.article.ArticleCategoryService;
-import fr.koi.wikiapi.web.model.article.ArticleCategoryModel;
-import fr.koi.wikiapi.web.model.article.ArticleCategorySearchCriteria;
-import fr.koi.wikiapi.web.model.article.CreateOrUpdateArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategorySearchCriteria;
+import fr.koi.wikiapi.web.model.graphql.article_category.CreateArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.UpdateArticleCategoryModel;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * The controller to manage article categories.
@@ -30,65 +32,30 @@ public class ArticleCategoryController {
      */
     private final ArticleCategorySearchService articleCategorySearchService;
 
-    /**
-     * Search entities.
-     *
-     * @param criteria The criteria
-     *
-     * @return The results
-     */
-    @GetMapping(Urls.ArticleCategory.BASE)
-    public Page<ArticleCategoryModel> search(final ArticleCategorySearchCriteria criteria) {
+    @QueryMapping
+    public Page<ArticleCategoryModel> searchArticleCategories(@Argument final ArticleCategorySearchCriteria criteria) {
         return this.articleCategorySearchService.search(criteria);
     }
 
-    /**
-     * Get a model with the specified ID and throw an error if not exists.
-     *
-     * @param id The ID
-     *
-     * @return The found model
-     */
-    @GetMapping(Urls.ArticleCategory.UNIQUE)
-    public ArticleCategoryModel getById(@PathVariable final Long id) {
+    @QueryMapping
+    public ArticleCategoryModel getArticleCategoryById(@Argument final Long id) {
         return this.articleCategoryService.getById(id);
     }
 
-    /**
-     * Create a new entity.
-     *
-     * @param data The data of entity to create
-     *
-     * @return The created entity
-     */
-    @PostMapping(Urls.ArticleCategory.BASE)
-    public ArticleCategoryModel create(@RequestBody @Valid final CreateOrUpdateArticleCategoryModel data) {
+    @MutationMapping
+    public ArticleCategoryModel createArticleCategory(@Argument final CreateArticleCategoryModel data) {
         return this.articleCategoryService.create(data);
     }
 
-    /**
-     * Update an entity based on the specified data.
-     *
-     * @param id   The ID of entity to update
-     * @param data The data of entity to create
-     *
-     * @return A model that represent the updated entity
-     */
-    @PutMapping(Urls.ArticleCategory.UNIQUE)
-    public ArticleCategoryModel update(
-        @PathVariable final Long id,
-        @RequestBody @Valid final CreateOrUpdateArticleCategoryModel data
-    ) {
-        return this.articleCategoryService.update(id, data);
+    @MutationMapping
+    public ArticleCategoryModel updateArticleCategory(@Argument final UpdateArticleCategoryModel data) {
+        return this.articleCategoryService.update(data);
     }
 
-    /**
-     * Delete the specified entity identified by his ID.
-     *
-     * @param id The ID of entity to delete
-     */
-    @DeleteMapping(Urls.ArticleCategory.UNIQUE)
-    public void delete(@PathVariable final Long id) {
+    @MutationMapping
+    public Long deleteArticleCategory(@Argument final Long id) {
         this.articleCategoryService.delete(id);
+
+        return id;
     }
 }

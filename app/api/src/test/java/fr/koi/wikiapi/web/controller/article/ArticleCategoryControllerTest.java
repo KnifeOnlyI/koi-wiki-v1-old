@@ -1,12 +1,12 @@
 package fr.koi.wikiapi.web.controller.article;
 
-import fr.koi.wikiapi.constants.Urls;
-import fr.koi.wikiapi.dto.RestPageTestImpl;
+import fr.koi.wikiapi.constants.GraphQlConstants;
 import fr.koi.wikiapi.web.BaseControllerTest;
-import fr.koi.wikiapi.web.model.article.ArticleCategoryModel;
-import fr.koi.wikiapi.web.model.article.ArticleCategorySearchCriteria;
-import fr.koi.wikiapi.web.model.article.CreateOrUpdateArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
+import fr.koi.wikiapi.web.utils.GraphQlResponse;
 import fr.koi.wikiapi.web.utils.HttpHeadersBuilder;
+import fr.koi.wikiapi.web.utils.QArticleCategory;
+import fr.koi.wikiapi.web.utils.QPageArticleCategory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,58 +36,15 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
     void testSearch() {
         HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
 
-        ArticleCategorySearchCriteria body = new ArticleCategorySearchCriteria();
-
-        ResponseEntity<RestPageTestImpl<ArticleCategoryModel>> response = this.restTemplate.exchange(
-            Urls.ArticleCategory.BASE,
-            HttpMethod.GET,
-            new HttpEntity<>(body, httpHeadersBuilder.build()),
-            new ParameterizedTypeReference<>() {
-            }
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            query {
+                searchArticleCategories(criteria: {}) {%s}
+            }""".formatted(GraphQlConstants.ArticleCategory.ALL_PAGE_FIELDS)
         );
 
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).isNotNull();
-    }
-
-    @Test
-    void testGetById() {
-        HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
-
-        ResponseEntity<ArticleCategoryModel> response = this.restTemplate.exchange(
-            Urls.ArticleCategory.UNIQUE,
-            HttpMethod.GET,
-            new HttpEntity<>(httpHeadersBuilder.build()),
-            new ParameterizedTypeReference<>() {
-            },
-            1L
-        );
-
-        assertThat(response).isNotNull();
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
-        ArticleCategoryModel responseBody = response.getBody();
-
-        assertThat(responseBody).isNotNull();
-        assertThat(responseBody.getId()).isNotNull();
-        assertThat(responseBody.getName()).isEqualTo("Java");
-        assertThat(responseBody.getDescription()).isEqualTo("All java articles");
-        assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
-        assertThat(responseBody.getLastUpdateAt()).isNull();
-        assertThat(responseBody.getDeletedAt()).isNull();
-    }
-
-    @Test
-    void testCreate() {
-        HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
-
-        CreateOrUpdateArticleCategoryModel body = new CreateOrUpdateArticleCategoryModel()
-            .setName("C++")
-            .setDescription("All C++ articles");
-
-        ResponseEntity<ArticleCategoryModel> response = this.restTemplate.exchange(
-            Urls.ArticleCategory.BASE,
+        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+            "/graphql",
             HttpMethod.POST,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
             new ParameterizedTypeReference<>() {
@@ -94,12 +54,82 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        ArticleCategoryModel responseBody = response.getBody();
-
+        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        QPageArticleCategory responseBody = graphQlResponseBody.getData().getSearchArticleCategories();
         assertThat(responseBody).isNotNull();
+
+        assertThat(responseBody.getContent()).isNotEmpty();
+    }
+
+    @Test
+    void testGetArticleCategoryById() {
+        HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
+
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            query {
+                getArticleCategoryById(id: 1) {%s}
+            }""".formatted(GraphQlConstants.ArticleCategory.ALL_FIELDS)
+        );
+
+        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+            "/graphql",
+            HttpMethod.POST,
+            new HttpEntity<>(body, httpHeadersBuilder.build()),
+            new ParameterizedTypeReference<>() {
+            }
+        );
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        ArticleCategoryModel responseBody = graphQlResponseBody.getData().getGetArticleCategoryById();
+        assertThat(responseBody).isNotNull();
+
         assertThat(responseBody.getId()).isNotNull();
-        assertThat(responseBody.getName()).isEqualTo(body.getName());
-        assertThat(responseBody.getDescription()).isEqualTo(body.getDescription());
+        assertThat(responseBody.getName()).isEqualTo("Java");
+        assertThat(responseBody.getDescription()).isEqualTo("All java articles");
+        assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
+        assertThat(responseBody.getLastUpdateAt()).isNull();
+        assertThat(responseBody.getDeletedAt()).isNull();
+    }
+
+    @Test
+    void testCreateArticleCategory() {
+        HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
+
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            mutation {
+                createArticleCategory(data: {
+                    name: "C++"
+                    description: "All C++ articles"
+                }) {%s}
+            }""".formatted(GraphQlConstants.ArticleCategory.ALL_FIELDS)
+        );
+
+        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+            "/graphql",
+            HttpMethod.POST,
+            new HttpEntity<>(body, httpHeadersBuilder.build()),
+            new ParameterizedTypeReference<>() {
+            }
+        );
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        ArticleCategoryModel responseBody = graphQlResponseBody.getData().getCreateArticleCategory();
+        assertThat(responseBody).isNotNull();
+
+        assertThat(responseBody.getId()).isNotNull();
+        assertThat(responseBody.getName()).isEqualTo("C++");
+        assertThat(responseBody.getDescription()).isEqualTo("All C++ articles");
         assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getLastUpdateAt()).isNull();
         assertThat(responseBody.getDeletedAt()).isNull();
@@ -109,28 +139,37 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
     void testUpdate() {
         HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
 
-        CreateOrUpdateArticleCategoryModel body = new CreateOrUpdateArticleCategoryModel()
-            .setName("Java updated")
-            .setDescription("Java updated description");
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            mutation {
+                updateArticleCategory(data: {
+                    id: 1
+                    name: "C++"
+                    description: "All C++ articles"
+                }) {%s}
+            }""".formatted(GraphQlConstants.ArticleCategory.ALL_FIELDS)
+        );
 
-        ResponseEntity<ArticleCategoryModel> response = this.restTemplate.exchange(
-            Urls.ArticleCategory.UNIQUE,
-            HttpMethod.PUT,
+        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+            "/graphql",
+            HttpMethod.POST,
             new HttpEntity<>(body, httpHeadersBuilder.build()),
             new ParameterizedTypeReference<>() {
-            },
-            1L
+            }
         );
 
         assertThat(response).isNotNull();
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        ArticleCategoryModel responseBody = response.getBody();
+        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        ArticleCategoryModel responseBody = graphQlResponseBody.getData().getUpdateArticleCategory();
+        assertThat(responseBody).isNotNull();
 
         assertThat(responseBody).isNotNull();
         assertThat(responseBody.getId()).isNotNull();
-        assertThat(responseBody.getName()).isEqualTo(body.getName());
-        assertThat(responseBody.getDescription()).isEqualTo(body.getDescription());
+        assertThat(responseBody.getName()).isEqualTo("C++");
+        assertThat(responseBody.getDescription()).isEqualTo("All C++ articles");
         assertThat(responseBody.getCreatedAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getLastUpdateAt()).isEqualTo(this.getNowZonedDateTime());
         assertThat(responseBody.getDeletedAt()).isNull();
@@ -140,17 +179,28 @@ class ArticleCategoryControllerTest extends BaseControllerTest {
     void testDelete() {
         HttpHeadersBuilder httpHeadersBuilder = new HttpHeadersBuilder().authorization(this.getRootToken());
 
-        ResponseEntity<ArticleCategoryModel> deleteResponse = this.restTemplate.exchange(
-            Urls.ArticleCategory.UNIQUE,
-            HttpMethod.DELETE,
-            new HttpEntity<>(httpHeadersBuilder.build()),
-            new ParameterizedTypeReference<>() {
-            },
-            1L
+        Map<String, String> body = new HashMap<>();
+        body.put("query", """
+            mutation {
+                deleteArticleCategory(id: 1)
+            }"""
         );
 
-        assertThat(deleteResponse).isNotNull();
-        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(deleteResponse.getBody()).isNull();
+        ResponseEntity<GraphQlResponse<QArticleCategory>> response = this.restTemplate.exchange(
+            "/graphql",
+            HttpMethod.POST,
+            new HttpEntity<>(body, httpHeadersBuilder.build()),
+            new ParameterizedTypeReference<>() {
+            }
+        );
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        GraphQlResponse<QArticleCategory> graphQlResponseBody = response.getBody();
+        assertThat(graphQlResponseBody).isNotNull();
+        Long responseBody = graphQlResponseBody.getData().getDeleteArticleCategory();
+
+        assertThat(responseBody).isEqualTo(1L);
     }
 }

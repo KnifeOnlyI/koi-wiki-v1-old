@@ -3,8 +3,9 @@ package fr.koi.wikiapi.service.article;
 import fr.koi.wikiapi.domain.ArticleCategoryEntity;
 import fr.koi.wikiapi.mapper.ArticleCategoryMapper;
 import fr.koi.wikiapi.repository.dao.ArticleCategoryDao;
-import fr.koi.wikiapi.web.model.article.ArticleCategoryModel;
-import fr.koi.wikiapi.web.model.article.CreateOrUpdateArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.CreateArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.UpdateArticleCategoryModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,7 @@ public class ArticleCategoryService {
      *
      * @return A model that represent the created entity
      */
-    public ArticleCategoryModel create(final CreateOrUpdateArticleCategoryModel data) {
+    public ArticleCategoryModel create(final CreateArticleCategoryModel data) {
         ArticleCategoryEntity entity = this.articleCategoryMapper.toEntity(data);
 
         this.articleCategoryDao.save(entity);
@@ -53,13 +54,12 @@ public class ArticleCategoryService {
     /**
      * Update an entity based on the specified data.
      *
-     * @param id   The ID of entity to update
      * @param data The data of entity to create
      *
      * @return A model that represent the updated entity
      */
-    public ArticleCategoryModel update(final Long id, final CreateOrUpdateArticleCategoryModel data) {
-        ArticleCategoryEntity entity = this.articleCategoryDao.getById(id);
+    public ArticleCategoryModel update(final UpdateArticleCategoryModel data) {
+        ArticleCategoryEntity entity = this.articleCategoryDao.getById(data.getId());
 
         this.articleCategoryMapper.updateEntity(entity, data);
 

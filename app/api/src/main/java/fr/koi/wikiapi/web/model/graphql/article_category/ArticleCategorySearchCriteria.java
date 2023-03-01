@@ -1,4 +1,4 @@
-package fr.koi.wikiapi.web.model.article;
+package fr.koi.wikiapi.web.model.graphql.article_category;
 
 import lombok.Getter;
 import lombok.Setter;

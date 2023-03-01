@@ -4,8 +4,9 @@ import fr.koi.wikiapi.domain.ArticleEntity;
 import fr.koi.wikiapi.mapper.ArticleMapper;
 import fr.koi.wikiapi.repository.dao.ArticleDao;
 import fr.koi.wikiapi.service.user.UserService;
-import fr.koi.wikiapi.web.model.article.ArticleModel;
-import fr.koi.wikiapi.web.model.article.CreateOrUpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.CreateOrUpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.UpdateArticleModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class ArticleService {
      * @return The found model
      */
     public ArticleModel getById(final Long id) {
-        return this.articleMapper.toModel(this.articleDao.getById(id));
+        return this.articleMapper.toQModel(this.articleDao.getById(id));
     }
 
     /**
@@ -54,23 +55,22 @@ public class ArticleService {
 
         this.articleDao.save(entity);
 
-        return this.articleMapper.toModel(entity);
+        return this.articleMapper.toQModel(entity);
     }
 
     /**
      * Update an entity based on the specified data.
      *
-     * @param id   The ID of entity to update
      * @param data The data of entity to create
      *
      * @return A model that represent the updated entity
      */
-    public ArticleModel update(final Long id, final CreateOrUpdateArticleModel data) {
-        ArticleEntity entity = this.articleDao.getById(id);
+    public ArticleModel update(final UpdateArticleModel data) {
+        ArticleEntity entity = this.articleDao.getById(data.id);
 
         this.articleMapper.updateEntity(entity, data);
 
-        return this.articleMapper.toModel(entity);
+        return this.articleMapper.toQModel(entity);
     }
 
     /**
@@ -78,7 +78,9 @@ public class ArticleService {
      *
      * @param id The ID of entity to delete
      */
-    public void delete(final Long id) {
+    public Long delete(final Long id) {
         this.articleDao.delete(id);
+
+        return id;
     }
 }

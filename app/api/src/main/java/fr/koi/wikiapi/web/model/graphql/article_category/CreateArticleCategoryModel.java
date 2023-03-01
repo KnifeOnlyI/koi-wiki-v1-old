@@ -1,4 +1,4 @@
-package fr.koi.wikiapi.web.model.article;
+package fr.koi.wikiapi.web.model.graphql.article_category;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class CreateOrUpdateArticleCategoryModel {
+public class CreateArticleCategoryModel {
     /**
      * The name.
      */

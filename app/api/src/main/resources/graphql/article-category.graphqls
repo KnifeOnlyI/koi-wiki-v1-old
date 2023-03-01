@@ -1,0 +1,36 @@
+type ArticleCategory {
+    id: ID
+    name: String
+    description: String!
+    createdAt: DateTime
+    lastUpdateAt: DateTime
+    deletedAt: String
+}
+
+type PageArticleCategory {
+    content: [ArticleCategory]      # Résultats
+    number: Int                     # Numéro de page
+    totalPages: Int                 # Nombre total de page
+    totalElements: Int              # Nombre total d'éléments
+}
+
+input CreateArticleCategory {
+    name: String!,
+    description: String
+}
+
+input UpdateArticleCategory {
+    id: ID!
+    name: String,
+    description: String
+}
+
+input ArticleCategorySearchCriteria {
+    page: Int
+    pageSize: Int
+    sort: String
+    q: String
+    authorId: String
+    archived: Boolean
+    deleted: Boolean
+}

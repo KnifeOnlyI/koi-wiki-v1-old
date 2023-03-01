@@ -1,0 +1,29 @@
+scalar DateTime
+
+type Query {
+
+    # ArticleCategory ##################################################################################################
+
+    searchArticleCategories(criteria: ArticleCategorySearchCriteria!): PageArticleCategory!
+    getArticleCategoryById(id: ID!): ArticleCategory!
+
+    # Article ##########################################################################################################
+
+    searchArticles(criteria: ArticleSearchCriteria!): PageArticle!
+    getArticleById(id: ID!): Article!
+}
+
+type Mutation {
+
+    # ArticleCategory ##################################################################################################
+
+    createArticleCategory(data: CreateArticleCategory!): ArticleCategory!
+    updateArticleCategory(data: UpdateArticleCategory!): ArticleCategory!
+    deleteArticleCategory(id: ID!): ID
+
+    # Article ##########################################################################################################
+
+    createArticle(data: CreateArticle!): Article!
+    updateArticle(data: UpdateArticle!): Article!
+    deleteArticle(id: ID!): ID
+}

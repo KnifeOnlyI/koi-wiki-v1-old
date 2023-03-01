@@ -5,8 +5,9 @@ import fr.koi.wikiapi.domain.ArticleCategoryEntity;
 import fr.koi.wikiapi.domain.ArticleEntity;
 import fr.koi.wikiapi.mapper.utils.StringMapper;
 import fr.koi.wikiapi.repository.dao.ArticleCategoryDao;
-import fr.koi.wikiapi.web.model.article.ArticleModel;
-import fr.koi.wikiapi.web.model.article.CreateOrUpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.CreateOrUpdateArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.UpdateArticleModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -79,7 +80,9 @@ public abstract class ArticleMapper {
      *
      * @return The corresponding model
      */
-    public abstract ArticleModel toModel(ArticleEntity entity);
+    public abstract fr.koi.wikiapi.web.model.article.ArticleModel toModel(ArticleEntity entity);
+
+    public abstract ArticleModel toQModel(ArticleEntity entity);
 
     /**
      * Map the specified model to entity.
@@ -100,7 +103,9 @@ public abstract class ArticleMapper {
      *
      * @return The corresponding models
      */
-    public abstract List<ArticleModel> toModels(List<ArticleEntity> entities);
+    public abstract List<fr.koi.wikiapi.web.model.article.ArticleModel> toModels(List<ArticleEntity> entities);
+
+    public abstract List<ArticleModel> toQModels(List<ArticleEntity> entities);
 
     /**
      * Update the specified entity with the value of the specified model.
@@ -112,4 +117,10 @@ public abstract class ArticleMapper {
     @Mapping(target = "description", source = "description", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
     @Mapping(target = "content", source = "content", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
     public abstract void updateEntity(@MappingTarget ArticleEntity entity, CreateOrUpdateArticleModel model);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "lastUpdateAt", expression = MapStructs.Expressions.ZONED_DATE_TIME_NOW)
+    @Mapping(target = "description", source = "description", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
+    @Mapping(target = "content", source = "content", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
+    public abstract void updateEntity(@MappingTarget ArticleEntity entity, UpdateArticleModel model);
 }

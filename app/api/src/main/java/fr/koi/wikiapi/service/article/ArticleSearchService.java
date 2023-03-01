@@ -13,8 +13,8 @@ import fr.koi.wikiapi.dto.exception.ForbiddenException;
 import fr.koi.wikiapi.dto.exception.NotFoundResourceException;
 import fr.koi.wikiapi.mapper.ArticleMapper;
 import fr.koi.wikiapi.service.user.UserService;
-import fr.koi.wikiapi.web.model.article.ArticleModel;
-import fr.koi.wikiapi.web.model.article.ArticleSearchCriteria;
+import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
+import fr.koi.wikiapi.web.model.graphql.article.ArticleSearchCriteria;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -101,7 +101,7 @@ public class ArticleSearchService {
         QueryResults<ArticleEntity> results = queryDSL.applyPagination(pageable, query).fetchResults();
 
         return new PageImpl<>(
-            this.articleMapper.toModels(results.getResults()),
+            this.articleMapper.toQModels(results.getResults()),
             pageable,
             results.getTotal()
         );

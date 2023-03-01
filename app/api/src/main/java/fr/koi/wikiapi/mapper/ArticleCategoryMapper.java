@@ -3,8 +3,9 @@ package fr.koi.wikiapi.mapper;
 import fr.koi.wikiapi.constants.MapStructs;
 import fr.koi.wikiapi.domain.ArticleCategoryEntity;
 import fr.koi.wikiapi.mapper.utils.StringMapper;
-import fr.koi.wikiapi.web.model.article.ArticleCategoryModel;
-import fr.koi.wikiapi.web.model.article.CreateOrUpdateArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.CreateArticleCategoryModel;
+import fr.koi.wikiapi.web.model.graphql.article_category.UpdateArticleCategoryModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -36,7 +37,7 @@ public interface ArticleCategoryMapper {
      */
     @Mapping(target = "createdAt", expression = MapStructs.Expressions.ZONED_DATE_TIME_NOW)
     @Mapping(target = "description", source = "description", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
-    ArticleCategoryEntity toEntity(CreateOrUpdateArticleCategoryModel model);
+    ArticleCategoryEntity toEntity(CreateArticleCategoryModel model);
 
     /**
      * Map the specified entities to models.
@@ -47,13 +48,8 @@ public interface ArticleCategoryMapper {
      */
     List<ArticleCategoryModel> toModels(List<ArticleCategoryEntity> entities);
 
-    /**
-     * Update the specified entity with the value of the specified model.
-     *
-     * @param entity The entity to udpate
-     * @param model  The model which contains the data
-     */
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "lastUpdateAt", expression = MapStructs.Expressions.ZONED_DATE_TIME_NOW)
     @Mapping(target = "description", source = "description", qualifiedBy = StringMapper.NullableStringToNotNullString.class)
-    void updateEntity(@MappingTarget ArticleCategoryEntity entity, CreateOrUpdateArticleCategoryModel model);
+    void updateEntity(@MappingTarget ArticleCategoryEntity entity, UpdateArticleCategoryModel model);
 }

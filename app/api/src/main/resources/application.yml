@@ -9,6 +9,9 @@ spring:
   liquibase:
     contexts: ${KOI_WIKI_PROFILE}
     change-log: classpath:/db/changelog/master.xml
+  graphql:
+    graphiql:
+      enabled: true
 
 koi-wiki:
   security:

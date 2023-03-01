@@ -1,4 +1,4 @@
-package fr.koi.wikiapi.web.model.article;
+package fr.koi.wikiapi.web.model.graphql.article;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +15,10 @@ import java.util.List;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class CreateOrUpdateArticleModel {
+public class UpdateArticleModel {
+    @NotNull
+    public Long id;
+
     /**
      * The name.
      */
