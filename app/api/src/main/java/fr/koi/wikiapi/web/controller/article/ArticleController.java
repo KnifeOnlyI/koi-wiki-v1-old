@@ -2,6 +2,7 @@ package fr.koi.wikiapi.web.controller.article;
 
 import fr.koi.wikiapi.service.article.ArticleSearchService;
 import fr.koi.wikiapi.service.article.ArticleService;
+import fr.koi.wikiapi.service.user.UserService;
 import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
 import fr.koi.wikiapi.web.model.graphql.article.ArticleSearchCriteria;
 import fr.koi.wikiapi.web.model.graphql.article.CreateArticleModel;
@@ -33,6 +34,11 @@ public class ArticleController {
     private final ArticleSearchService articleSearchService;
 
     /**
+     * The service to manage users.
+     */
+    private final UserService userService;
+
+    /**
      * Search entities.
      *
      * @param criteria The criteria
@@ -41,6 +47,8 @@ public class ArticleController {
      */
     @QueryMapping
     public Page<ArticleModel> searchArticles(@Argument final ArticleSearchCriteria criteria) {
+        this.userService.assertUserLogged();
+
         return this.articleSearchService.search(criteria);
     }
 
@@ -53,6 +61,8 @@ public class ArticleController {
      */
     @QueryMapping
     public ArticleModel getArticleById(@Argument final Long id) {
+        this.userService.assertUserLogged();
+
         return this.articleService.getById(id);
     }
 
@@ -65,6 +75,8 @@ public class ArticleController {
      */
     @MutationMapping
     public ArticleModel createArticle(@Argument final CreateArticleModel data) {
+        this.userService.assertUserLogged();
+
         return this.articleService.create(data);
     }
 
@@ -77,6 +89,8 @@ public class ArticleController {
      */
     @MutationMapping
     public ArticleModel updateArticle(@Argument final UpdateArticleModel data) {
+        this.userService.assertUserLogged();
+
         return this.articleService.update(data);
     }
 
@@ -89,6 +103,8 @@ public class ArticleController {
      */
     @MutationMapping
     public Long deleteArticle(@Argument final Long id) {
+        this.userService.assertUserLogged();
+
         this.articleService.delete(id);
 
         return id;

@@ -2,6 +2,7 @@ package fr.koi.wikiapi.web.controller.article;
 
 import fr.koi.wikiapi.service.article.ArticleCategorySearchService;
 import fr.koi.wikiapi.service.article.ArticleCategoryService;
+import fr.koi.wikiapi.service.user.UserService;
 import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
 import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategorySearchCriteria;
 import fr.koi.wikiapi.web.model.graphql.article_category.CreateArticleCategoryModel;
@@ -33,6 +34,11 @@ public class ArticleCategoryController {
     private final ArticleCategorySearchService articleCategorySearchService;
 
     /**
+     * The service to manage users.
+     */
+    private final UserService userService;
+
+    /**
      * Search entities.
      *
      * @param criteria The criteria
@@ -41,6 +47,8 @@ public class ArticleCategoryController {
      */
     @QueryMapping
     public Page<ArticleCategoryModel> searchArticleCategories(@Argument final ArticleCategorySearchCriteria criteria) {
+        this.userService.assertUserLogged();
+
         return this.articleCategorySearchService.search(criteria);
     }
 
@@ -53,6 +61,8 @@ public class ArticleCategoryController {
      */
     @QueryMapping
     public ArticleCategoryModel getArticleCategoryById(@Argument final Long id) {
+        this.userService.assertUserLogged();
+
         return this.articleCategoryService.getById(id);
     }
 
@@ -65,6 +75,8 @@ public class ArticleCategoryController {
      */
     @MutationMapping
     public ArticleCategoryModel createArticleCategory(@Argument final CreateArticleCategoryModel data) {
+        this.userService.assertUserLogged();
+
         return this.articleCategoryService.create(data);
     }
 
@@ -77,6 +89,8 @@ public class ArticleCategoryController {
      */
     @MutationMapping
     public ArticleCategoryModel updateArticleCategory(@Argument final UpdateArticleCategoryModel data) {
+        this.userService.assertUserLogged();
+
         return this.articleCategoryService.update(data);
     }
 
@@ -89,6 +103,8 @@ public class ArticleCategoryController {
      */
     @MutationMapping
     public Long deleteArticleCategory(@Argument final Long id) {
+        this.userService.assertUserLogged();
+
         this.articleCategoryService.delete(id);
 
         return id;

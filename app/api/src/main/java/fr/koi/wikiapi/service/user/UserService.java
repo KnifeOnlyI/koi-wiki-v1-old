@@ -1,5 +1,6 @@
 package fr.koi.wikiapi.service.user;
 
+import fr.koi.wikiapi.dto.exception.ForbiddenException;
 import fr.koi.wikiapi.dto.user.KeycloakToken;
 import fr.koi.wikiapi.web.model.user.KeycloakUserInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -70,6 +71,15 @@ public class UserService {
             this.keycloakHost,
             "master"
         ));
+    }
+
+    /**
+     * Assert the user is logged.
+     */
+    public void assertUserLogged() {
+        if (this.getUserId() == null) {
+            throw new ForbiddenException();
+        }
     }
 
     /**
