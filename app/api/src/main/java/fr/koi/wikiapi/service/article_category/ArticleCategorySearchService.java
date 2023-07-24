@@ -1,4 +1,4 @@
-package fr.koi.wikiapi.service.article;
+package fr.koi.wikiapi.service.article_category;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
@@ -6,13 +6,9 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.PathBuilderFactory;
 import com.querydsl.jpa.impl.JPAQuery;
-import fr.koi.wikiapi.constants.Roles;
 import fr.koi.wikiapi.domain.ArticleCategoryEntity;
 import fr.koi.wikiapi.domain.QArticleCategoryEntity;
-import fr.koi.wikiapi.dto.exception.ForbiddenException;
-import fr.koi.wikiapi.dto.exception.NotFoundResourceException;
 import fr.koi.wikiapi.mapper.ArticleCategoryMapper;
-import fr.koi.wikiapi.service.user.UserService;
 import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
 import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategorySearchCriteria;
 import jakarta.persistence.EntityManager;
@@ -42,10 +38,7 @@ public class ArticleCategorySearchService {
      */
     private final ArticleCategoryMapper articleCategoryMapper;
 
-    /**
-     * The service to manage users.
-     */
-    private final UserService userService;
+    private final ArticleCategoryAuthenticationService articleCategoryAuthenticationService;
 
     /**
      * The entity manager.
@@ -61,15 +54,7 @@ public class ArticleCategorySearchService {
      * @return The results
      */
     public Page<ArticleCategoryModel> search(final ArticleCategorySearchCriteria criteria) {
-        if (!this.userService.hasRole(Roles.ArticleCategory.SEARCH)) {
-            throw new NotFoundResourceException();
-        }
-
-        if (((criteria.getDeleted() == null || criteria.getDeleted())
-            && !this.userService.hasRole(Roles.ArticleCategory.SEARCH_DELETED))
-        ) {
-            throw new ForbiddenException();
-        }
+        this.articleCategoryAuthenticationService.checkSearchRoles(criteria);
 
         JPAQuery<ArticleCategoryEntity> query = this.buildQuery(criteria);
         Pageable pageable = PageRequest.of(criteria.getPage(), criteria.getPageSize());
@@ -101,11 +86,10 @@ public class ArticleCategorySearchService {
 
         List<Predicate> whereFilters = new ArrayList<>();
 
-        Optional.ofNullable(criteria.getDeleted())
-            .ifPresent(value -> whereFilters.add(criteria.getDeleted()
-                ? qArticleCategory.deletedAt.isNotNull()
-                : qArticleCategory.deletedAt.isNull()
-            ));
+        whereFilters.add(criteria.isDeleted()
+            ? qArticleCategory.deletedAt.isNotNull()
+            : qArticleCategory.deletedAt.isNull()
+        );
 
         Optional.ofNullable(criteria.getName())
             .ifPresent(value -> whereFilters.add(qArticleCategory.name.containsIgnoreCase(value)));

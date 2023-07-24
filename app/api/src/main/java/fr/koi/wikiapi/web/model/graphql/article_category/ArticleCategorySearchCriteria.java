@@ -41,7 +41,7 @@ public class ArticleCategorySearchCriteria {
     /**
      * TRUE to include deleted entities in the results, FALSE otherwise.
      */
-    private Boolean deleted;
+    private boolean deleted = false;
 
     /**
      * The list of excluded ids.

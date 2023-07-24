@@ -1,12 +1,9 @@
 package fr.koi.wikiapi.repository.dao;
 
-import fr.koi.wikiapi.constants.Roles;
 import fr.koi.wikiapi.domain.ArticleCategoryEntity;
-import fr.koi.wikiapi.dto.exception.NotFoundResourceException;
-import fr.koi.wikiapi.dto.exception.article.NotFoundArticleCategoryException;
+import fr.koi.wikiapi.dto.exception.article.NotFoundArticleException;
 import fr.koi.wikiapi.repository.ArticleCategoryRepository;
-import fr.koi.wikiapi.service.user.UserService;
-import fr.koi.wikiapi.utils.TimeProvider;
+import fr.koi.wikiapi.service.article_category.ArticleCategoryAuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +19,9 @@ public class ArticleCategoryDao {
     private final ArticleCategoryRepository articleCategoryRepository;
 
     /**
-     * The service to manage users.
+     * The service to article category authentication.
      */
-    private final UserService userService;
+    private final ArticleCategoryAuthenticationService articleCategoryAuthenticationService;
 
     /**
      * Get an entity with the specified ID and throw an error if not exists.
@@ -34,38 +31,22 @@ public class ArticleCategoryDao {
      * @return The found entity
      */
     public ArticleCategoryEntity getById(final Long id) {
-        if (this.userService.hasRole(Roles.ArticleCategory.READ_DELETED)) {
-            return this.articleCategoryRepository.findById(id)
-                .orElseThrow(() -> new NotFoundArticleCategoryException(id));
-        } else if (this.userService.hasRole(Roles.ArticleCategory.READ)) {
-            return this.articleCategoryRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new NotFoundArticleCategoryException(id));
-        } else {
-            throw new NotFoundArticleCategoryException(id);
-        }
+        var entity = this.articleCategoryRepository.findById(id).orElseThrow(() -> new NotFoundArticleException(id));
+
+        this.articleCategoryAuthenticationService.checkReadRoles(entity);
+
+        return entity;
     }
 
     /**
      * Save the specified entity.
      *
-     * @param data The entity to save
+     * @param entity The entity to save
      */
-    public void save(final ArticleCategoryEntity data) {
-        if (data.getId() == null) {
-            if (!this.userService.hasRole(Roles.ArticleCategory.CREATE)) {
-                throw new NotFoundResourceException();
-            }
-        } else {
-            if (data.getDeletedAt() == null) {
-                if (!this.userService.hasRole(Roles.ArticleCategory.UPDATE)) {
-                    throw new NotFoundResourceException();
-                }
-            } else if (!this.userService.hasRole(Roles.ArticleCategory.UPDATE_DELETED)) {
-                throw new NotFoundResourceException();
-            }
-        }
+    public void save(final ArticleCategoryEntity entity) {
+        this.articleCategoryAuthenticationService.checkSaveRoles(entity);
 
-        this.articleCategoryRepository.save(data);
+        this.articleCategoryRepository.save(entity);
     }
 
     /**
@@ -76,18 +57,8 @@ public class ArticleCategoryDao {
     public void delete(final Long id) {
         ArticleCategoryEntity entity = this.getById(id);
 
-        if (entity.getDeletedAt() == null) {
-            if (!this.userService.hasRole(Roles.ArticleCategory.DELETE)) {
-                throw new NotFoundArticleCategoryException(id);
-            }
+        this.articleCategoryAuthenticationService.checkDeleteRoles(entity);
 
-            entity.setDeletedAt(TimeProvider.getInstance().nowZonedDateTime());
-        } else {
-            if (!this.userService.hasRole(Roles.ArticleCategory.DELETE_DELETED)) {
-                throw new NotFoundArticleCategoryException(id);
-            }
-
-            this.articleCategoryRepository.deleteById(id);
-        }
+        this.articleCategoryRepository.deleteById(id);
     }
 }

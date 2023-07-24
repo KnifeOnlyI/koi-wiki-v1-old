@@ -19,11 +19,11 @@ type Mutation {
 
     createArticleCategory(data: CreateArticleCategory!): ArticleCategory!
     updateArticleCategory(data: UpdateArticleCategory!): ArticleCategory!
-    deleteArticleCategory(id: ID!): ID
+    deleteArticleCategoryById(id: ID!): ID
 
     # Article ##########################################################################################################
 
     createArticle(data: CreateArticle!): Article!
     updateArticle(data: UpdateArticle!): Article!
-    deleteArticle(id: ID!): ID
+    deleteArticleById(id: ID!): ID
 }

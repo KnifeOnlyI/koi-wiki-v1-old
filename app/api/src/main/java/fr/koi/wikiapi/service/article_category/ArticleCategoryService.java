@@ -1,4 +1,4 @@
-package fr.koi.wikiapi.service.article;
+package fr.koi.wikiapi.service.article_category;
 
 import fr.koi.wikiapi.domain.ArticleCategoryEntity;
 import fr.koi.wikiapi.mapper.ArticleCategoryMapper;

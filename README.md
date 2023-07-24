@@ -54,7 +54,6 @@ The project have multiple runners to help developers :
             - delete-article-category
             - delete-deleted-article-category
             - search-article-category
-            - search-deleted-article-category
             - create-article
             - read-article
             - read-deleted-article
@@ -63,7 +62,6 @@ The project have multiple runners to help developers :
             - delete-article
             - delete-deleted-article
             - search-article
-            - search-deleted-article
         2. User: admin
             - create-article-category
             - read-article-category
@@ -178,7 +176,6 @@ Koi Wiki app need some realms role :
 - delete-article-category
 - delete-deleted-article-category
 - search-article-category
-- search-deleted-article-category
 - create-article
 - read-article
 - read-deleted-article
@@ -187,4 +184,3 @@ Koi Wiki app need some realms role :
 - delete-article
 - delete-deleted-article
 - search-article
-- search-deleted-article

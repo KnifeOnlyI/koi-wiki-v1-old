@@ -102,7 +102,7 @@ public class ArticleController {
      * @return The ID of deleted entity
      */
     @MutationMapping
-    public Long deleteArticle(@Argument final Long id) {
+    public Long deleteArticleById(@Argument final Long id) {
         this.userService.assertUserLogged();
 
         this.articleService.delete(id);

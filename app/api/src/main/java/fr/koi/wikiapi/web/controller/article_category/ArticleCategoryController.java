@@ -1,7 +1,7 @@
-package fr.koi.wikiapi.web.controller.article;
+package fr.koi.wikiapi.web.controller.article_category;
 
-import fr.koi.wikiapi.service.article.ArticleCategorySearchService;
-import fr.koi.wikiapi.service.article.ArticleCategoryService;
+import fr.koi.wikiapi.service.article_category.ArticleCategorySearchService;
+import fr.koi.wikiapi.service.article_category.ArticleCategoryService;
 import fr.koi.wikiapi.service.user.UserService;
 import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategoryModel;
 import fr.koi.wikiapi.web.model.graphql.article_category.ArticleCategorySearchCriteria;
@@ -102,7 +102,7 @@ public class ArticleCategoryController {
      * @return The ID of deleted entity
      */
     @MutationMapping
-    public Long deleteArticleCategory(@Argument final Long id) {
+    public Long deleteArticleCategoryById(@Argument final Long id) {
         this.userService.assertUserLogged();
 
         this.articleCategoryService.delete(id);

@@ -6,13 +6,9 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.PathBuilderFactory;
 import com.querydsl.jpa.impl.JPAQuery;
-import fr.koi.wikiapi.constants.Roles;
 import fr.koi.wikiapi.domain.ArticleEntity;
 import fr.koi.wikiapi.domain.QArticleEntity;
-import fr.koi.wikiapi.dto.exception.ForbiddenException;
-import fr.koi.wikiapi.dto.exception.NotFoundResourceException;
 import fr.koi.wikiapi.mapper.ArticleMapper;
-import fr.koi.wikiapi.service.user.UserService;
 import fr.koi.wikiapi.web.model.graphql.article.ArticleModel;
 import fr.koi.wikiapi.web.model.graphql.article.ArticleSearchCriteria;
 import jakarta.persistence.EntityManager;
@@ -44,7 +40,7 @@ public class ArticleSearchService {
     /**
      * The service to manage users.
      */
-    private final UserService userService;
+    private final ArticleAuthenticationService articleAuthenticationService;
 
     /**
      * The entity manager.
@@ -60,35 +56,7 @@ public class ArticleSearchService {
      * @return The results
      */
     public Page<ArticleModel> search(final ArticleSearchCriteria criteria) {
-        if (!this.userService.hasRole(Roles.Article.SEARCH)) {
-            throw new NotFoundResourceException();
-        }
-
-        if (((criteria.getDeleted() == null || criteria.getDeleted())
-            && !this.userService.hasRole(Roles.Article.SEARCH_DELETED))
-        ) {
-            throw new ForbiddenException();
-        }
-
-        if (((criteria.getArchived() == null || criteria.getArchived())
-            && !this.userService.hasRole(Roles.Article.SEARCH_ARCHIVED))
-        ) {
-            throw new ForbiddenException();
-        }
-
-        if (criteria.getAuthorId() == null || !this.userService.getUserId().equals(criteria.getAuthorId())) {
-            if (((criteria.getArchived() == null || criteria.getArchived())
-                && !this.userService.hasRole(Roles.Article.SEARCH_OTHER_ARCHIVED))
-            ) {
-                throw new ForbiddenException();
-            }
-
-            if (((criteria.getDeleted() == null || criteria.getDeleted())
-                && !this.userService.hasRole(Roles.Article.SEARCH_OTHER_DELETED))
-            ) {
-                throw new ForbiddenException();
-            }
-        }
+        this.articleAuthenticationService.checkSearchRoles(criteria);
 
         JPAQuery<ArticleEntity> query = this.buildQuery(criteria);
         Pageable pageable = PageRequest.of(criteria.getPage(), criteria.getPageSize());
@@ -120,17 +88,12 @@ public class ArticleSearchService {
 
         List<Predicate> whereFilters = new ArrayList<>();
 
-        Optional.ofNullable(criteria.getDeleted())
-            .ifPresent(value -> whereFilters.add(criteria.getDeleted()
-                ? qArticle.deletedAt.isNotNull()
-                : qArticle.deletedAt.isNull()
-            ));
+        whereFilters.add(criteria.isDeleted()
+            ? qArticle.deletedAt.isNotNull()
+            : qArticle.deletedAt.isNull()
+        );
 
-        Optional.ofNullable(criteria.getArchived())
-            .ifPresent(value -> whereFilters.add(criteria.getArchived()
-                ? qArticle.isArchived.isNotNull()
-                : qArticle.isArchived.isNull()
-            ));
+        whereFilters.add(qArticle.isArchived.eq(criteria.isArchived()));
 
         Optional.ofNullable(criteria.getAuthorId())
             .ifPresent(value -> whereFilters.add(qArticle.authorId.eq(value)));
